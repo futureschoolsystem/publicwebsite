@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Login Portal',
+  title: 'Future School System | Okara',
   description: 'Secure login portal for Future School Students, Teachers, and Admins',
 };
 

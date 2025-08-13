@@ -21,6 +21,8 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, User, Lock, UserCheck } from "lucide-react";
 import Image from "next/image";
+import {signIn} from 'next-auth/react';
+import axios from "axios";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +33,7 @@ export default function LoginForm() {
     password: "",
     registrationNo: "",
     contact: "",
-    role: "student", 
+    role: "student",
   });
 
   const handleSubmit = async (e) => {
@@ -39,29 +41,38 @@ export default function LoginForm() {
     setError("");
     setIsLoading(true);
 
-    // Validation
-    if (!formData.email || !formData.password || !formData.role) {
+    // // Validation
+
+    if (formData.role==="student" &&  (!formData.registrationNo || !formData.contact)) {
       setError("Please fill in all fields");
       setIsLoading(false);
       return;
     }
 
+    if ((formData.role==="teacher" || formData.role==="admin") &&  (!formData.userName || !formData.password  )) {
+      setError("Please fill in all fields");
+      setIsLoading(false);
+      return;
+    }
     // Simulate login
     try {
-      await new Promise((res) => setTimeout(res, 1000));
-      console.log("Login Data:", formData);
+      const result = await axios.post("/api/auth/login", formData);
+    if (result.status === 200) {
+      signIn("credentials", {
+          userName: formData.userName,
+          password: formData.password,
+          registrationNo: formData.registrationNo,
+          contact: formData.contact,
+          role: formData.role,
+          callbackUrl: `/student`,
+        });
+      }
+
       setIsLoading(false);
-      setFormData({
-        userName: "",
-        password: "",
-        registrationNo: "",
-        contact: "",
-        role: "",
-    });
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (error) {
+      setError(error.response?.data?.errors || "Something went wrong.");
       setIsLoading(false);
-  }
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -156,100 +167,93 @@ export default function LoginForm() {
 
                 {/* User Name */}
                 <div className="space-y-2">
-                 
-                 {formData.role === "student"?
-                 <>
-<Label htmlFor="registrationNo">Registration No</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="registrationNo"
-                      type="text"
-                      value={formData.registrationNo}
-                      onChange={(e) =>
-                        handleInputChange("registrationNo", e.target.value)
-                      }
-                      className="pl-10"
-                      placeholder="Enter your Registration No"
-                      />
-                  </div>
-                      </>
-                  :
-                  <>
-<Label htmlFor="userName">User Name</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="userName"
-                      type="text"
-                      value={formData.userName}
-                      onChange={(e) =>
-                        handleInputChange("userName", e.target.value)
-                      }
-                      className="pl-10"
-                      placeholder="Enter your User Name"
-                      />
-                  </div>
-                      </>
-
-                  }
+                  {formData.role === "student" ? (
+                    <>
+                      <Label htmlFor="registrationNo">Registration No</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="registrationNo"
+                          type="text"
+                          value={formData.registrationNo}
+                          onChange={(e) =>
+                            handleInputChange("registrationNo", e.target.value)
+                          }
+                          className="pl-10"
+                          placeholder="Enter your Registration No"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <Label htmlFor="userName">User Name</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="userName"
+                          type="text"
+                          value={formData.userName}
+                          onChange={(e) =>
+                            handleInputChange("userName", e.target.value)
+                          }
+                          className="pl-10"
+                          placeholder="Enter your User Name"
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
-                 
-                  
-
-
-
-
 
                 {/* Password */}
                 <div className="space-y-2">
-                  {formData.role==="student"?
-                  <>
-                  <Label htmlFor="contact">Contact No</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="contact"
-                      type='text'
-                      value={formData.contact}
-                      onChange={(e) =>
-                        handleInputChange("contact", e.target.value)
-                      }
-                      className="pl-10 pr-10"
-                      placeholder="Enter your contact number"
-                    />
-                    </div>
-                      </>:
-                      <>
+                  {formData.role === "student" ? (
+                    <>
+                      <Label htmlFor="contact">Contact No</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="contact"
+                          type="text"
+                          value={formData.contact}
+                          onChange={(e) =>
+                            handleInputChange("contact", e.target.value)
+                          }
+                          className="pl-10 pr-10"
+                          placeholder="Enter your contact number"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
                       <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      value={formData.password}
-                      onChange={(e) =>
-                        handleInputChange("password", e.target.value)
-                      }
-                      className="pl-10 pr-10"
-                      placeholder="Enter your password"
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </div>
-                      </>
-}
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          value={formData.password}
+                          onChange={(e) =>
+                            handleInputChange("password", e.target.value)
+                          }
+                          className="pl-10 pr-10"
+                          placeholder="Enter your password"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4 text-muted-foreground" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-muted-foreground" />
+                          )}
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Submit */}
