@@ -41,7 +41,7 @@ const HeroSection = () => {
             <motion.div variants={containerVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "100px" }} className="inline-flex items-center gap-2 text-blue-700 font-semibold bg-blue-100 rounded-full px-4 py-1 shadow-sm text-sm hover:shadow-md transition">
+                   className="inline-flex items-center gap-2 text-blue-700 font-semibold bg-blue-100 rounded-full px-4 py-1 shadow-sm text-sm hover:shadow-md transition">
               <GraduationCap className="w-5 h-5" />
               Admissions Open 2025-26
             </motion.div>
@@ -51,7 +51,7 @@ const HeroSection = () => {
             variants={itemVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
+                  
               className={`${geist.className} text-4xl  sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight`}
             >
               A Vision of{" "}
@@ -65,7 +65,7 @@ const HeroSection = () => {
             variants={itemVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
+                  
                    className="text-lg sm:text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
               At Future School System, we provide world-class education with
               modern facilities, experienced faculty, and a nurturing
@@ -77,7 +77,7 @@ const HeroSection = () => {
             variants={itemVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
+                  
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button
                 size="lg"
@@ -95,7 +95,7 @@ const HeroSection = () => {
                 variants={itemVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
+                  
                   className={`${bungee.className} text-2xl font-bold text-blue-600`}
                 >
                   15+
@@ -104,7 +104,7 @@ const HeroSection = () => {
                   variants={itemVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
+                  
                   className="text-sm text-gray-600"
                 >
                   Years Experience
@@ -115,7 +115,7 @@ const HeroSection = () => {
                 variants={itemVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
+                  
                   className={`${bungee.className} text-2xl font-bold text-blue-600`}
                 >
                   1000+
@@ -124,7 +124,7 @@ const HeroSection = () => {
                   variants={itemVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
+                  
                   className="text-sm text-gray-600"
                 >
                   Active Students
@@ -135,7 +135,7 @@ const HeroSection = () => {
                   variants={itemVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
+                  
                   className={`${bungee.className} text-2xl font-bold text-blue-600`}
                 >
                   95%
@@ -144,7 +144,7 @@ const HeroSection = () => {
                   variants={itemVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "-100px" }}
+                  
                   className="text-sm text-gray-600"
                 >
                   Success Rate
@@ -158,7 +158,7 @@ const HeroSection = () => {
             variants={containerVariants}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
+            
             className="relative w-full h-auto max-w-md mx-auto lg:mx-0"
           >
             <Image
