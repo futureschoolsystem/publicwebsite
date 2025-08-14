@@ -39,7 +39,7 @@ export const authOptions = {
         if (credentials.userName && credentials.password) {
           const user = await User.findOne({
             userName: credentials.userName,
-          }); 
+          });  
           if (user) {
             return {
               id: user._id.toString(),

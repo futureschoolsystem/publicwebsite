@@ -1,15 +1,23 @@
-// src/lib/mongodb.js
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+let isConnected = false;
+export async function connect() {
+  if (isConnected) {
+    console.log("✅ Using existing MongoDB connection");
+    return;
+  }
 
-export  function connect(){
-  mongoose
-  .connect(process.env.MONGODB_URI ,{
-    tls:true,
-  })
-  .then(()=>{
-    console.log("Database Connected")
-  })
-  .catch((error)=>{
-    console.log("There is an error while connecting Mongodb",error)
-  })
-} 
+  if (!process.env.MONGODB_URI) {
+    throw new Error("❌ MONGODB_URI is not defined in environment variables");
+  }
+  try {
+    const db = await mongoose.connect(process.env.MONGODB_URI, {
+      tls: true,
+    });
+
+    isConnected = true;
+    console.log("✅ MongoDB connected successfully");
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error);
+    throw error;
+  }
+}

@@ -31,7 +31,7 @@ const HeroSection = () => {
   return (
     <section
       id="home"
-      className="bg-gradient-to-br from-green-50 to-green-100 pt-10 pb-20"
+      className="bg-gradient-to-br from-blue-50 to-blue-100 pt-10 pb-20"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -41,7 +41,7 @@ const HeroSection = () => {
             <motion.div variants={containerVariants}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, margin: "100px" }} className="inline-flex items-center gap-2 text-green-700 font-semibold bg-green-100 rounded-full px-4 py-1 shadow-sm text-sm hover:shadow-md transition">
+                  viewport={{ once: true, margin: "100px" }} className="inline-flex items-center gap-2 text-blue-700 font-semibold bg-blue-100 rounded-full px-4 py-1 shadow-sm text-sm hover:shadow-md transition">
               <GraduationCap className="w-5 h-5" />
               Admissions Open 2025-26
             </motion.div>
@@ -55,7 +55,7 @@ const HeroSection = () => {
               className={`${geist.className} text-4xl  sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight`}
             >
               A Vision of{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-emerald-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500">
                 Transformative Education
               </span>
             </motion.h1>
@@ -81,7 +81,7 @@ const HeroSection = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button
                 size="lg"
-                className="bg-green-600 hover:bg-green-700 transition duration-300"
+                className="bg-blue-600 hover:bg-blue-700 transition duration-300"
               >
                 Apply Now
                 <ChevronRight className="ml-2 h-4 w-4" />
@@ -96,7 +96,7 @@ const HeroSection = () => {
                   initial="hidden"
                   whileInView="show"
                   viewport={{ once: true, margin: "-100px" }}
-                  className={`${bungee.className} text-2xl font-bold text-green-600`}
+                  className={`${bungee.className} text-2xl font-bold text-blue-600`}
                 >
                   15+
                 </motion.div>
@@ -116,7 +116,7 @@ const HeroSection = () => {
                   initial="hidden"
                   whileInView="show"
                   viewport={{ once: true, margin: "-100px" }}
-                  className={`${bungee.className} text-2xl font-bold text-green-600`}
+                  className={`${bungee.className} text-2xl font-bold text-blue-600`}
                 >
                   1000+
                 </motion.div>
@@ -136,7 +136,7 @@ const HeroSection = () => {
                   initial="hidden"
                   whileInView="show"
                   viewport={{ once: true, margin: "-100px" }}
-                  className={`${bungee.className} text-2xl font-bold text-green-600`}
+                  className={`${bungee.className} text-2xl font-bold text-blue-600`}
                 >
                   95%
                 </motion.div>
@@ -172,8 +172,8 @@ const HeroSection = () => {
             {/* Floating Badge */}
             <div className="absolute -bottom-6 -left-4 bg-white p-4 rounded-xl shadow-xl w-[200px]">
               <div className="flex items-center space-x-3">
-                <div className="bg-green-100 p-2 rounded-full">
-                  <Award className="h-5 w-5 text-green-600" />
+                <div className="bg-blue-100 p-2 rounded-full">
+                  <Award className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900 text-sm">

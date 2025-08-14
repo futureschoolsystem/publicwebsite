@@ -4,11 +4,12 @@ import Student from "@/models/studentSchema";
 import User from "@/models/userSchema";
 import { NextResponse } from "next/server";
 
-connect()
 
+connect();
 
 export async function POST(request) {
     try {
+  
         const body = await request.json();
         if(body.userName==undefined || body.password==undefined || body.role==undefined){
             return NextResponse.json({status:400,errors:"Please fill all fields"}, { status: 400 });
@@ -28,6 +29,7 @@ export async function POST(request) {
         }
         if(body.role==="admin" || body.role==="teacher"){
             const user = await User.findOne({ userName: body.userName,role:body.role })
+            console.log(user)
             if (!user) {
                 return NextResponse.json({status:400,errors:"Please enter Correct userName and Role"}, { status: 400 });
             }
@@ -45,10 +47,6 @@ export async function POST(request) {
             return NextResponse.json({status:200,url, message:"Admin Logged in Successfully"},{status:200})
         }
     } catch (error) {
-         if (error instanceof errors.E_VALIDATION_ERROR) {
-              return NextResponse.json({status:400,errors:error.messages}, { status: 400 });
-            }
             return NextResponse.json({status:500, message: "Internal Server Error" }, { status: 500 });
-          
     }
 }
