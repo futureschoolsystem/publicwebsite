@@ -17,7 +17,16 @@ export const metadata = {
   description:
     "Future School System is Okara's leading educational institution, offering quality education, modern teaching methods, and a nurturing environment from Nursery to Matric. Empowering students with knowledge, discipline, and innovation for a brighter future.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", type: "image/x-icon" },
+    ],
+    apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
+  },
+  manifest: "/site.webmanifest",
+  appleWebApp: {
+    title: "FSS",
   },
   openGraph: {
     title: "Future School System | Okara",
@@ -59,7 +68,7 @@ export default function RootLayout({ children }) {
       "logo": "https://futureschoolsystem.pk/logo.png",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Your Address Here",
+        "streetAddress": "JALAL TOWN G.T ROAD، 1 Multan Okara Rd, Okara",
         "addressLocality": "Okara",
         "addressRegion": "Punjab",
         "postalCode": "56300",
@@ -67,13 +76,32 @@ export default function RootLayout({ children }) {
       },
       "contactPoint": {
         "@type": "ContactPoint",
-        "telephone": "+92-XXX-XXXXXXX",
-        "contactType": "Customer Service"
+        "telephone": "+92-311-2306050",
+        "contactType": "Admissions"
       },
       "sameAs": [
-        "https://www.facebook.com/yourpage",  // update as needed
-        "https://www.instagram.com/yourpage"
-      ]
+        // "https://www.facebook.com/yourpage",  
+        // "https://www.instagram.com/yourpage"
+      ],
+      "foundingDate": "2015-01-01",
+      "founder": {
+        "@type": "Person",
+        "name": "RAO TANVEER"
+      },
+      "offers": [
+        {
+          "@type": "EducationalOccupationalProgram",
+          "name": "Nursery to Matric Program",
+          "description": "Comprehensive curriculum from Nursery to Matric, with focus on academics, sports, and personal growth.",
+          "educationalProgramMode": "Onsite",
+          "provider": {
+            "@type": "EducationalOrganization",
+            "name": "Future School System"
+          }
+        }
+      ],
+      "numberOfEmployees": "50+", 
+      // "awards": ["Best School in Okara 2022", "Excellence in Education Award"]
     })
   }}
 />
