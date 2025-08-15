@@ -58,7 +58,7 @@ const features = [
 export default function WhyChooseUs() {
     return (
         <section className="bg-gray-50">
-            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-2">
                 {/* Heading */}
                 <div className="text-center ">
                     <div className="w-full sm:w-2/3 md:w-1/2 mx-auto">
@@ -132,15 +132,7 @@ export default function WhyChooseUs() {
                     ))}
                 </div>
 
-                {/* Call-to-Action */}
-                <div className="text-center mt-12">
-                    <a
-                        href="/admissions"
-                        className="px-8 py-3 bg-blue-600 text-white text-lg font-medium rounded-full shadow hover:bg-blue-700 transition"
-                    >
-                        Enroll Now
-                    </a>
-                </div>
+                
             </div>
         </section>
     );

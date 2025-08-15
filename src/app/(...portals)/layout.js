@@ -1,10 +1,11 @@
 'use client'
-import PortalNavbar from "@/components/portal-components/PortalNavbar";
+import { SessionProvider } from "next-auth/react";
 export default function portalLayout({ children }) {
   return (
       <>
-      <PortalNavbar />
+      <SessionProvider>        
             {children}
+      </SessionProvider>
     </>
   );
 }

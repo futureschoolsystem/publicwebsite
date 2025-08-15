@@ -11,15 +11,15 @@ const TopHeader = () => {
         <div className="flex flex-wrap justify-center md:justify-start gap-4 text-xs md:text-sm">
           <div className="flex items-center">
             <FaPhone className="mr-1 text-white/70" />
-            <span>1454 895</span>
+            <span>044-2715620</span>
           </div>
           <div className="flex items-center">
             <FaMobileAlt className="mr-1 text-white/70" />
-            <span>+92 311 459363</span>
+            <span>+92 311-2306050</span>
           </div>
           <div className="flex items-center">
             <FaEnvelope className="mr-1 text-white/70" />
-            <span>info@futureschool.com</span>
+            <span>futureschool786@gmail.com</span>
           </div>
         </div>
 

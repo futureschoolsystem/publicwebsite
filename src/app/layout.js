@@ -27,9 +27,9 @@ export const metadata = {
       'max-video-preview': -1,
     },
   },
-  title: "Future School System | Okara",
+  title: "Future School System - Quality Education in Okara",
   description:
-    "Future School System is Okara's leading educational institution, offering quality education, modern teaching methods, and a nurturing environment from Nursery to Matric. Empowering students with knowledge, discipline, and innovation for a brighter future.",
+    "Top school in Okara with quality education from Nursery to Matric. Empowering students through innovation, discipline, and modern teaching.",
   icons: {
     icon: [
       { url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
@@ -94,10 +94,9 @@ export default function RootLayout({ children }) {
         "contactType": "Admissions"
       },
       "sameAs": [
-        // "https://www.facebook.com/yourpage",  
-        // "https://www.instagram.com/yourpage"
+        "https://www.facebook.com/futureschool.okara",
       ],
-      "foundingDate": "2015-01-01",
+      "foundingDate": "03-01-2013",
       "founder": {
         "@type": "Person",
         "name": "RAO TANVEER"
@@ -115,7 +114,7 @@ export default function RootLayout({ children }) {
         }
       ],
       "numberOfEmployees": "50+", 
-      // "awards": ["Best School in Okara 2022", "Excellence in Education Award"]
+      "awards": ["Best School in Okara", "Award in Educational Excellence"]
     })
   }}
 />

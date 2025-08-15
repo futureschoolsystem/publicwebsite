@@ -9,6 +9,7 @@ import {
   FaMapMarkerAlt,
   FaPhone,
   FaEnvelope,
+  FaWhatsapp,
 } from 'react-icons/fa';
 import Image from 'next/image';
 
@@ -47,9 +48,7 @@ function Footer() {
               <div className="bg-gradient-to-r from-white to-cyan-500 p-2 rounded-lg mr-3">
                 <Image src="/futureschoollogo.png" alt="Future School System Logo" width={200} height={100} />
               </div>
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-cyan-400 bg-clip-text text-transparent">
-                Future School System
-              </h2>
+            
             </motion.div>
 
             <motion.p variants={itemVariants} className="mb-6 text-gray-400">
@@ -176,18 +175,18 @@ function Footer() {
             <motion.ul variants={containerVariants} className="space-y-4">
               <motion.li variants={itemVariants} className="flex items-start">
                 <FaMapMarkerAlt className="text-cyan-400 mt-1 mr-3 flex-shrink-0" />
-                <span>GT Road, Okara<br />Punjab, Pakistan</span>
+                <span>JALAL TOWN G.T Road،5/4-L Road,<br />Okara,Punjab, Pakistan</span>
               </motion.li>
 
               <motion.li variants={itemVariants} className="flex items-center">
-                <FaPhone className="text-blue-400 mr-3" />
-                <a href="tel:+923101111111" className="hover:text-white transition-colors">+92 310 1111111</a>
+                <FaWhatsapp className="text-blue-400 mr-3" />
+                <a href="tel:+92 3112306050" className="hover:text-white transition-colors">+92 3112306050</a>
               </motion.li>
 
               <motion.li variants={itemVariants} className="flex items-center">
                 <FaEnvelope className="text-cyan-400 mr-3" />
-                <a href="mailto:info@futureschoolsystem.com" className="hover:text-white transition-colors">
-                  info@futureschoolsystem.com
+                <a href="mailto:futureschool786@gmail.com" className="hover:text-white transition-colors">
+                  futureschool786@gmail.com
                 </a>
               </motion.li>
             </motion.ul>
