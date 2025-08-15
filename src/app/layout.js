@@ -13,6 +13,20 @@ const geistMono = Geist_Mono({
 
 
 export const metadata = {
+  metadataBase: new URL('https://futureschoolsystem.pk'),
+  alternates: { canonical: '/' }, 
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
   title: "Future School System | Okara",
   description:
     "Future School System is Okara's leading educational institution, offering quality education, modern teaching methods, and a nurturing environment from Nursery to Matric. Empowering students with knowledge, discipline, and innovation for a brighter future.",
