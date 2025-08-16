@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 const images = [
+  '/home/fssbuilding.jpg',
   '/herosectionimage.jpg',
-  '/frontpageposter.jpg',
-  '/herosectionimage.jpg',
+  '/home/imgSlider2.jpg',
   // Add more image paths as needed
 ];
 
@@ -33,7 +33,7 @@ const ImageSlider = () => {
       key={current}
         src={images[current]}
         alt={`Slide ${current + 1}`}
-        className="w-full h-[450px] object-cover transition-all duration-700"
+        className="w-full h-[450px] sm:object-cover md:object-fill transition-all duration-700"
         initial={{ opacity: 0  }}
           animate={{ opacity: 1}}
           exit={{ opacity: 0, x: -50 }}

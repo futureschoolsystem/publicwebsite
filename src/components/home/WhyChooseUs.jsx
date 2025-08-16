@@ -16,42 +16,42 @@ const features = [
 		title: "Quality Education",
 		description:
 			"Experienced teachers using modern, effective teaching methods to ensure top results.",
-		image: "/herosectionimage.jpg",
+		image: "/home/qualityEducation.jpg",
 	},
 	{
 		icon: <Users className="w-10 h-10 text-black" />,
 		title: "Holistic Development",
 		description:
 			"We nurture academic excellence alongside sports, arts, and character building.",
-		image: "/herosectionimage.jpg",
+		image: "/home/holisticDevelopment.jpg",
 	},
 	{
 		icon: <ShieldCheck className="w-10 h-10 text-black" />,
 		title: "Safe & Supportive",
 		description:
 			"Secure campus, caring staff, and a strong anti-bullying policy for peace of mind.",
-		image: "/herosectionimage.jpg",
+		image: "/home/safeAndSupportive.jpg",
 	},
 	{
 		icon: <Building className="w-10 h-10 text-black" />,
 		title: "Modern Facilities",
 		description:
 			"Smart classrooms, labs, library, and playgrounds to support all learning styles.",
-		image: "/herosectionimage.jpg",
+		image: "/home/modernFacilities.jpg",
 	},
 	{
 		icon: <Award className="w-10 h-10 text-black" />,
 		title: "Proven Results",
 		description:
 			"Consistent top positions in board exams and extracurricular competitions.",
-		image: "/herosectionimage.jpg",
+		image: "/home/provenResults.jpg",
 	},
 	{
 		icon: <HandCoins  className="w-10 h-10 text-black" />,
 		title: "Affordable Excellence",
 		description:
 			"High-quality education with a fee structure that works for every family.",
-		image: "/herosectionimage.jpg",
+		image: "/home/affordableExcellence.jpg",
 	},
 ];
 
@@ -120,7 +120,7 @@ export default function WhyChooseUs() {
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: 0.4, duration: 0.5 }}
-                                className="w-full h-40 overflow-hidden"
+                                className="w-full h-60 overflow-hidden"
                             >
                                 <img
                                     src={feature.image}

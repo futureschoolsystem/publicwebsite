@@ -162,7 +162,7 @@ const HeroSection = () => {
             className="relative w-full h-auto max-w-md mx-auto lg:mx-0"
           >
             <Image
-              src="/herosectionimage.jpg"
+              src="/home/transformativeInformation.jpg"
               alt="Future School System Campus"
               width={600}
               height={600}
