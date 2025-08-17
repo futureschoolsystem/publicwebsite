@@ -1,14 +1,17 @@
 "use client"
 import { useState } from "react"
-import { FaUser, FaMoneyBill, FaBook, FaCalendarCheck, FaBars, FaTimes } from "react-icons/fa"
+import { FaUser, FaMoneyBill, FaBook, FaCalendarCheck, FaBars, FaTimes, FaBell, FaDownload } from "react-icons/fa"
 import { cn } from "@/lib/utils"
 import SignoutButton from "./SignoutButton"
+import Image from "next/image"
 
 const tabs = [
   { key: "PersonalInformation", label: "Personal Information", icon: <FaUser /> },
-  { key: "FeeRecords", label: "Fee Records", icon: <FaMoneyBill /> },
+  { key: "FeeRecords", label: "Fee History", icon: <FaMoneyBill /> },
   { key: "AcademicRecords", label: "Academic Records", icon: <FaBook /> },
   { key: "AttendanceInfo", label: "Attendance Info", icon: <FaCalendarCheck /> },
+  { key: "Notices&Announcements", label: "Notices & Announcements", icon: <FaBell /> },
+  { key: "Downloads", label: "Downloads", icon: <FaDownload /> },
 ]
 
 const Sidebar = ({ setTab }) => {
@@ -47,7 +50,8 @@ const Sidebar = ({ setTab }) => {
         )}
       >
         <div className="flex flex-col h-full p-6">
-          <div className="mb-8">
+          <div className="mb-4">
+            <Image src={"/futureschoollogo.png"} alt="Logo" width={150} height={50} className="mx-auto mb-2" />
             <h1 className="text-2xl lg:text-3xl font-bold text-blue-900 text-center mb-2">Student Portal</h1>
             <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full"></div>
           </div>
@@ -78,11 +82,10 @@ const Sidebar = ({ setTab }) => {
             ))}
           </nav>
 
-          <div className="mt-8 pt-6 border-t border-blue-100">
+          <div className="mt-8 mb-4 pt-6 border-t flex justify-center items-center border-blue-100">
+            
             <SignoutButton />
-            <div className="text-center text-xs text-blue-600">
-              <p className="font-medium">Future School System Okara</p>
-            </div>
+           
           </div>
         </div>
       </aside>

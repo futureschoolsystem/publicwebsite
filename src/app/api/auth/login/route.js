@@ -9,9 +9,9 @@ connect();
 
 export async function POST(request) {
     try {
-  
+  console.log("Login API called");
         const body = await request.json();
-        if(body.userName==undefined || body.password==undefined || body.role==undefined){
+        if((body.userName==undefined &&body.registrationNo==undefined) || (body.password==undefined && body.contact==undefined) || body.role==undefined){
             return NextResponse.json({status:400,errors:"Please fill all fields"}, { status: 400 });
         }
         if(body.role==="student"){

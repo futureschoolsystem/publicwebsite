@@ -175,7 +175,7 @@ function Footer() {
             <motion.ul variants={containerVariants} className="space-y-4">
               <motion.li variants={itemVariants} className="flex items-start">
                 <FaMapMarkerAlt className="text-cyan-400 mt-1 mr-3 flex-shrink-0" />
-                <span>JALAL TOWN G.T Road،5/4-L Road,<br />Okara,Punjab, Pakistan</span>
+                <span>JALAL TOWN G.T Road،5/4L Road,<br />Okara,Punjab, Pakistan</span>
               </motion.li>
 
               <motion.li variants={itemVariants} className="flex items-center">

@@ -138,7 +138,7 @@ const HeroSection = () => {
                   
                   className={`${bungee.className} text-2xl font-bold text-blue-600`}
                 >
-                  95%
+                  100%
                 </motion.div>
                 <motion.div
                   variants={itemVariants}

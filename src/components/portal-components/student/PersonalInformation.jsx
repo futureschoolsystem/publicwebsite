@@ -12,9 +12,7 @@ const PersonalInformation = () => {
     async function fetchData() {
       if (session?.user?.registrationNo) {
         try {
-          console.log("fetching")
           const personalInfo = await axios.get(`/api/student/personal-info/${session.user.registrationNo}`);
-          console.log(personalInfo)
           setPersonalInfo(personalInfo.data);                                       
         } catch (error) {
          console.log(error)

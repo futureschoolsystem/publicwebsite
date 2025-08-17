@@ -57,6 +57,7 @@ export default function LoginForm() {
     // Simulate login
     try {
       const result = await axios.post("/api/auth/login", formData);
+
     if (result.status === 200) {
       signIn("credentials", {
           userName: formData.userName,
@@ -64,7 +65,7 @@ export default function LoginForm() {
           registrationNo: formData.registrationNo,
           contact: formData.contact,
           role: formData.role,
-          callbackUrl: `/student`,
+          callbackUrl: `/${result.data.url}`,
         });
       }
 

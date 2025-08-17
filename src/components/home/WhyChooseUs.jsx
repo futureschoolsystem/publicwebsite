@@ -30,7 +30,7 @@ const features = [
 		title: "Safe & Supportive",
 		description:
 			"Secure campus, caring staff, and a strong anti-bullying policy for peace of mind.",
-		image: "/home/safeAndSupportive.jpg",
+		image: "/home/safeandsupportive.jpg",
 	},
 	{
 		icon: <Building className="w-10 h-10 text-black" />,
