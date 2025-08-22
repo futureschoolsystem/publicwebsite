@@ -4,9 +4,9 @@ import Fee from "@/models/feeSchema";
 import Student from "@/models/studentSchema";
 import OtherFeePayment from "@/models/otherFeeSchema";
 
-export async function GET(request, {params}){
+export async function GET(request, context){
 await connect()
-const { registrationNo } = params;
+const { registrationNo } =await context.params;
 try {
 const student = await Student.findOne({ registrationNo });
 if (!student) {

@@ -43,30 +43,6 @@ const FeeRecords = () => {
     if (status === "authenticated") fetchFeeData();
   }, [session, status]);
 
-  const handlePrintVoucher = (record) => {};
-  const handlePrint = () => {
-    const voucherHTML = generateSingleVoucher(
-      student,
-      feeRecords,
-      otherCharges,
-      photoUrl,
-      arrears,
-      otherTotal
-    );
-
-    // Open new print window
-    const printWindow = window.open("", "_blank");
-    printWindow.document.open();
-    printWindow.document.write(voucherHTML);
-    printWindow.document.close();
-
-    // Wait a little to load styles before printing
-    printWindow.onload = function () {
-      printWindow.print();
-      printWindow.close();
-    };
-  };
-
   // Loading and error states
   if (status === "loading" || loading) {
     return <div className="text-center py-10">Loading fee records...</div>;
@@ -81,7 +57,6 @@ const FeeRecords = () => {
 
   return (
     <div className="space-y-6">
-      <button onClick={handlePrint}>
         <FeeVoucher
           student={student}
           feeRecords={feeRecords}
@@ -90,7 +65,6 @@ const FeeRecords = () => {
           arrears={arrears}
           otherTotal={otherTotal}
         />
-      </button>
       {/* Filter and Actions */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">

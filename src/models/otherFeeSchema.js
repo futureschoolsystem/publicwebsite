@@ -34,5 +34,5 @@ const otherFeeSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-const OtherFeePayment = mongoose.model("OtherFeePayment", otherFeeSchema);
-export default OtherFeePayment; 
+const OtherFeePayment = mongoose.models.OtherFeePayment || mongoose.model('OtherFeePayment',otherFeeSchema);
+export default OtherFeePayment;
