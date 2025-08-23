@@ -14,7 +14,7 @@ const FeeRecords = () => {
   const photoUrl = student?.photoUrl || "";
   const arrears = feeRecords.reduce(
     (acc, record) =>
-      acc + (record.status === "Unpaid" ? record.totalAmount : 0),
+      acc + (record.status === "Unpaid" ? record.totalFee : 0),
     0
   );
   const otherTotal = otherCharges.reduce(
