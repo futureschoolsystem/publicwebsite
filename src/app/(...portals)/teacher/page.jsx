@@ -5,7 +5,7 @@ import TeacherSidebar from "@/components/portal-components/TeacherSidebar"
 
 const Page = () => {
   const [tab, setTab] = useState("notice-downloads-dairy")
-
+{/* teacher sidebar */}
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
