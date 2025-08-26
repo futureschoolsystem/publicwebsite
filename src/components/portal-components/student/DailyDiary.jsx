@@ -3,51 +3,44 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function DailyDiary() {
-  const [downloads, setDownloads] = useState([]); // ✅ start with empty array
+  const [diaries, setDiaries] = useState([]);
   const [loading, setLoading] = useState(true);
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    async function fetchDownloads() {
+    async function fetchDiaries() {
       if (status !== "authenticated") return;
       try {
         const res = await fetch(
-          `/api/student/downloads/${session.user.registrationNo}`
+          `/api/student/daily-diary/${session.user.registrationNo}`
         );
         const data = await res.json();
-
-        // ✅ check if downloads is an array
-        if (data.success && Array.isArray(data.downloads)) {
-          setDownloads(data.downloads);
-        } else {
-          setDownloads([]);
-        }
+        if (data.success) setDiaries(data.diaries);
       } catch (error) {
-        console.error("Error fetching downloads:", error);
-        setDownloads([]); // fallback
+        console.error("Error fetching diaries:", error);
       } finally {
         setLoading(false);
       }
     }
-    fetchDownloads();
+    fetchDiaries();
   }, [status, session]);
 
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto p-4 text-gray-500">
-        ⏳ Loading Please Wait...
+        ⏳ Loading diary entries...
       </div>
     );
   }
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">📘 Available Downloads</h2>
-      {(!downloads || downloads.length === 0) ? (  // ✅ safeguard
-        <p className="text-gray-500">No Data found.</p>
+      <h2 className="text-2xl font-bold mb-4">📘 Daily Diary</h2>
+      {diaries.length === 0 ? (
+        <p className="text-gray-500">No diary entries found.</p>
       ) : (
         <div className="space-y-4">
-          {downloads.map((diary) => (
+          {diaries.map((diary) => (
             <div
               key={diary._id}
               className="p-4 border rounded-lg shadow bg-white"
@@ -74,7 +67,7 @@ export default function DailyDiary() {
                             📌 Click on the arrow in the top-right to download
                           </p>
                           <a
-                            href="https://drive.google.com/file/d/FILE_ID/view"
+                            href={url}
                             target="_self"
                           >
                             <img
@@ -102,7 +95,7 @@ export default function DailyDiary() {
                     } else if (isDrive) {
                       return (
                         <div>
-                          <p className="text-xs text-black animate-bounce mb-1">
+                          <p className="text-xs text-black animate-bounce mb-1" >
                             📌 Click on the arrow in the top-right to download
                           </p>
                           <a href={url} target="_self">

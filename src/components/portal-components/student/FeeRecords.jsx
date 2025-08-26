@@ -41,7 +41,7 @@ const FeeRecords = () => {
       }
     }
     if (status === "authenticated") fetchFeeData();
-  }, [session, status]);
+  },[status, session?.user?.registrationNo]);
 
   // Loading and error states
   if (status === "loading" || loading) {

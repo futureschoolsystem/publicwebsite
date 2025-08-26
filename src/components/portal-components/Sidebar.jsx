@@ -8,6 +8,7 @@ import Image from "next/image"
 const tabs = [
   { key: "PersonalInformation", label: "Personal Information", icon: <FaUser /> },
   { key: "FeeRecords", label: "Fee History", icon: <FaMoneyBill /> },
+  { key: "DailyDiary", label: "Daily Diary", icon: <FaBook /> },
   { key: "AcademicRecords", label: "Academic Records", icon: <FaBook /> },
   { key: "AttendanceInfo", label: "Attendance Info", icon: <FaCalendarCheck /> },
   { key: "Notices&Announcements", label: "Notices & Announcements", icon: <FaBell /> },
@@ -30,6 +31,7 @@ const Sidebar = ({ setTab }) => {
 
   return (
     <>
+      {/* Mobile Menu Toggle */}
       <div className="md:hidden fixed top-4 left-4 z-50">
         <button
           onClick={toggleMobileMenu}
@@ -39,54 +41,58 @@ const Sidebar = ({ setTab }) => {
         </button>
       </div>
 
+      {/* Overlay when menu is open on mobile */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 bg-black/50 z-40" onClick={() => setIsMobileMenuOpen(false)} />
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
       )}
 
+      {/* Sidebar */}
       <aside
         className={cn(
-          "fixed md:relative top-0 left-0 z-40 w-80 md:w-72 lg:w-80 h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 border-r border-blue-100 shadow-xl transition-transform duration-300 ease-in-out",
+          "fixed md:relative top-0 left-0 z-40 w-80 md:w-72 lg:w-80 h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 border-r border-blue-100 shadow-xl transition-transform duration-300 ease-in-out flex flex-col",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         )}
       >
-        <div className="flex flex-col h-full p-6">
-          <div className="mb-4">
-            <Image src={"/futureschoollogo.png"} alt="Logo" width={150} height={50} className="mx-auto mb-2" />
-            <h1 className="text-2xl lg:text-3xl font-bold text-blue-900 text-center mb-2">Student Portal</h1>
-            <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full"></div>
-          </div>
+        {/* Header (fixed) */}
+        <div className="p-6 flex-shrink-0">
+          <Image src={"/futureschoollogo.png"} alt="Logo" width={150} height={50} className="mx-auto mb-2" />
+          <h1 className="text-2xl lg:text-3xl font-bold text-blue-900 text-center mb-2">Student Portal</h1>
+          <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full"></div>
+        </div>
 
-          <nav className="flex-1 space-y-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => handleSelect(tab.key)}
+        {/* Links (scrollable) */}
+        <nav className="flex-1 overflow-y-auto px-6 space-y-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => handleSelect(tab.key)}
+              className={cn(
+                "group w-full flex items-center gap-4 px-4 py-4 rounded-xl font-medium transition-all duration-200 text-left",
+                selected === tab.key
+                  ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-[1.02]"
+                  : "text-blue-700 hover:bg-blue-50 hover:text-blue-800 hover:shadow-md hover:transform hover:scale-[1.01]",
+              )}
+            >
+              <span
                 className={cn(
-                  "group w-full flex items-center gap-4 px-4 py-4 rounded-xl font-medium transition-all duration-200 text-left",
-                  selected === tab.key
-                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-[1.02]"
-                    : "text-blue-700 hover:bg-blue-50 hover:text-blue-800 hover:shadow-md hover:transform hover:scale-[1.01]",
+                  "text-xl transition-transform duration-200",
+                  selected === tab.key ? "text-white" : "text-blue-500 group-hover:text-blue-600",
                 )}
               >
-                <span
-                  className={cn(
-                    "text-xl transition-transform duration-200",
-                    selected === tab.key ? "text-white" : "text-blue-500 group-hover:text-blue-600",
-                  )}
-                >
-                  {tab.icon}
-                </span>
-                <span className="font-semibold text-sm lg:text-base leading-tight">{tab.label}</span>
-                {selected === tab.key && <div className="ml-auto w-2 h-2 bg-white rounded-full"></div>}
-              </button>
-            ))}
-          </nav>
+                {tab.icon}
+              </span>
+              <span className="font-semibold text-sm lg:text-base leading-tight">{tab.label}</span>
+              {selected === tab.key && <div className="ml-auto w-2 h-2 bg-white rounded-full"></div>}
+            </button>
+          ))}
+        </nav>
 
-          <div className="mt-8 mb-4 pt-6 border-t flex justify-center items-center border-blue-100">
-            
-            <SignoutButton />
-           
-          </div>
+        {/* Footer (fixed) */}
+        <div className="p-6 border-t border-blue-100 flex-shrink-0">
+          <SignoutButton />
         </div>
       </aside>
     </>

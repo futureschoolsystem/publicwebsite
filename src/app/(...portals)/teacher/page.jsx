@@ -1,19 +1,17 @@
 "use client"
-import Sidebar from "@/components/portal-components/Sidebar"
+import TeacherSidebar from "@/components/portal-components/TeacherSidebar"
 import { useState } from "react"
-import PersonalInformation from "@/components/portal-components/student/PersonalInformation"
-
+import NoticeDownloadsDairy from "@/components/portal-components/teacher/NoticeDownloadsDairy"
 const Page = () => {
-  const [tab, setTab] = useState("PersonalInformation")
+  const [tab, setTab] = useState("notice-downloads-dairy")
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex">
-        <Sidebar setTab={setTab} />
-
+        <TeacherSidebar setTab={setTab} />
         <main className="flex-1 md:ml-0 p-4 md:p-8">
           <div className="max-w-4xl mx-auto">
-            {tab === "PersonalInformation" && <PersonalInformation />}
+            {tab === "notice-downloads-dairy" && <NoticeDownloadsDairy />}
           </div>
         </main>
       </div>

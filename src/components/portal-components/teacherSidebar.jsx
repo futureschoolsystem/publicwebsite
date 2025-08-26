@@ -1,21 +1,16 @@
 "use client"
 import { useState } from "react"
-import { FaUser, FaMoneyBill, FaBook, FaCalendarCheck, FaBars, FaTimes, FaBell, FaDownload } from "react-icons/fa"
+import {  FaBook, FaBars, FaTimes } from "react-icons/fa"
 import { cn } from "@/lib/utils"
 import SignoutButton from "./SignoutButton"
 import Image from "next/image"
 
 const tabs = [
-  { key: "PersonalInformation", label: "Personal Information", icon: <FaUser /> },
-  { key: "FeeRecords", label: "Fee History", icon: <FaMoneyBill /> },
-  { key: "AcademicRecords", label: "Academic Records", icon: <FaBook /> },
-  { key: "AttendanceInfo", label: "Attendance Info", icon: <FaCalendarCheck /> },
-  { key: "Notices&Announcements", label: "Notices & Announcements", icon: <FaBell /> },
-  { key: "Downloads", label: "Downloads", icon: <FaDownload /> },
+  { key: "AddDailyDairy", label: "Add Daily Dairy", icon: <FaBook /> },
 ]
 
-const teacherSidebar = ({ setTab }) => {
-  const [selected, setSelected] = useState("PersonalInformation")
+const TeacherSidebar = ({ setTab }) => {
+  const [selected, setSelected] = useState("AddDailyDairy")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleSelect = (tab) => {
@@ -52,10 +47,9 @@ const teacherSidebar = ({ setTab }) => {
         <div className="flex flex-col h-full p-6">
           <div className="mb-4">
             <Image src={"/futureschoollogo.png"} alt="Logo" width={150} height={50} className="mx-auto mb-2" />
-            <h1 className="text-2xl lg:text-3xl font-bold text-blue-900 text-center mb-2">Student Portal</h1>
+            <h1 className="text-2xl lg:text-3xl font-bold text-blue-900 text-center mb-2">Teacher Portal</h1>
             <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 mx-auto rounded-full"></div>
           </div>
-
           <nav className="flex-1 space-y-2">
             {tabs.map((tab) => (
               <button
@@ -92,5 +86,4 @@ const teacherSidebar = ({ setTab }) => {
     </>
   )
 }
-
-export default teacherSidebar
+export default TeacherSidebar

@@ -5,6 +5,9 @@ import PersonalInformation from "@/components/portal-components/student/Personal
 import FeeRecords from "@/components/portal-components/student/FeeRecords"
 import Attendance from "@/components/portal-components/student/Attendance"
 import Academics from "@/components/portal-components/student/Academics"
+import DailyDiary from "@/components/portal-components/student/DailyDiary"
+import NoticesAndAnnouncements from "@/components/portal-components/student/Notices&Announcements"
+import Downloads from "@/components/portal-components/student/Downloads"
 
 const Page = () => {
   const [tab, setTab] = useState("PersonalInformation")
@@ -20,6 +23,9 @@ const Page = () => {
             {tab === "FeeRecords" && <FeeRecords />}
             {tab === "AttendanceInfo" && <Attendance />}
             {tab === "AcademicRecords" && <Academics />}
+            {tab === "DailyDiary" && <DailyDiary />}
+            {tab === "Notices&Announcements" && <NoticesAndAnnouncements />}
+            {tab === "Downloads" && <Downloads />}
           </div>
         </main>
       </div>
