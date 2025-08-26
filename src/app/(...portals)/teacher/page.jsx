@@ -1,7 +1,8 @@
 "use client"
-import TeacherSidebar from "@/components/portal-components/TeacherSidebar"
 import { useState } from "react"
 import NoticeDownloadsDairy from "@/components/portal-components/teacher/NoticeDownloadsDairy"
+import TeacherSidebar from "@/components/portal-components/TeacherSidebar"
+
 const Page = () => {
   const [tab, setTab] = useState("notice-downloads-dairy")
 
