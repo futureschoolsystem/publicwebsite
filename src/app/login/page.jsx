@@ -300,10 +300,10 @@ export default function LoginForm() {
       <div className="hidden lg:block relative">
         <div className="absolute inset-0">
           <Image
-            src="/herosectionimage.jpg"
+            src="/home/fssbuilding.jpg"
             alt="Education background"
             fill
-            className="object-cover"
+            className="object-fit"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>

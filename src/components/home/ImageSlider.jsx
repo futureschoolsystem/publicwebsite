@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 const images = [
   '/home/fssbuilding.jpg',
-  '/herosectionimage.jpg',
+  '/home/holisticDevelopment.jpg',
   '/home/imgSlider2.jpg',
+  '/home/transformativeInformation.jpg',
+  '/home/modernFacilities.jpg',
   // Add more image paths as needed
 ];
 

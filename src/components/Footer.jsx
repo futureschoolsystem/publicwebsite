@@ -10,6 +10,8 @@ import {
   FaPhone,
   FaEnvelope,
   FaWhatsapp,
+  FaTiktok,
+  FaBuilding,
 } from 'react-icons/fa';
 import Image from 'next/image';
 
@@ -57,7 +59,7 @@ function Footer() {
 
             <motion.div variants={itemVariants} className="flex space-x-4">
               <a
-                href="https://facebook.com/futureschoolsystem"
+                href="https://www.facebook.com/fssokara"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-gray-800 p-3 rounded-full transition-all duration-300 hover:text-blue-500 hover:bg-gray-700 transform hover:-translate-y-1"
@@ -65,24 +67,22 @@ function Footer() {
                 <FaFacebookF />
               </a>
               <a
-                href="https://twitter.com/futureschool"
-                target="_blank"
+                href=""
                 rel="noopener noreferrer"
                 className="bg-gray-800 p-3 rounded-full transition-all duration-300 hover:text-cyan-400 hover:bg-gray-700 transform hover:-translate-y-1"
               >
                 <FaTwitter />
               </a>
-              <a
-                href="https://linkedin.com/company/futureschool"
+               <a
+                href="https://www.tiktok.com/@future_school_system"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-gray-800 p-3 rounded-full transition-all duration-300 hover:text-blue-400 hover:bg-gray-700 transform hover:-translate-y-1"
+                className="bg-gray-800 p-3 rounded-full transition-all duration-300 hover:text-yellow-500 hover:bg-gray-700 transform hover:-translate-y-1"
               >
-                <FaLinkedinIn />
-              </a>
+                <FaTiktok />
+</a>
               <a
-                href="https://instagram.com/futureschoolsystem"
-                target="_blank"
+                href=""
                 rel="noopener noreferrer"
                 className="bg-gray-800 p-3 rounded-full transition-all duration-300 hover:text-pink-500 hover:bg-gray-700 transform hover:-translate-y-1"
               >
@@ -162,49 +162,84 @@ function Footer() {
           </motion.div>
 
           {/* Contact Info */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
-          >
-            <motion.h3 variants={itemVariants} className="text-xl font-bold mb-6 text-white">
-              Contact Us
-            </motion.h3>
+<motion.div
+  variants={containerVariants}
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, margin: "-100px" }}
+>
+  <motion.h3 variants={itemVariants} className="text-xl font-bold mb-6 text-white">
+    Contact Us
+  </motion.h3>
 
-            <motion.ul variants={containerVariants} className="space-y-4">
-              <motion.li variants={itemVariants} className="flex items-start">
-                <FaMapMarkerAlt className="text-cyan-400 mt-1 mr-3 flex-shrink-0" />
-                <span>JALAL TOWN G.T Road،5/4L Road,<br />Okara,Punjab, Pakistan</span>
-              </motion.li>
+  <motion.ul variants={containerVariants} className="space-y-4">
 
-              <motion.li variants={itemVariants} className="flex items-center">
-                <FaWhatsapp className="text-blue-400 mr-3" />
-                <a href="tel:+92 3112306050" className="hover:text-white transition-colors">+92 3112306050</a>
-              </motion.li>
+    {/* Zaheer Campus */}
+    <motion.li variants={itemVariants} className="flex items-start">
+      <FaBuilding className="text-cyan-400 mt-1 mr-3 flex-shrink-0" />
+      <span>Zaheer Campus</span>
+    </motion.li>
 
-              <motion.li variants={itemVariants} className="flex items-center">
-                <FaEnvelope className="text-cyan-400 mr-3" />
-                <a href="mailto:futureschool786@gmail.com" className="hover:text-white transition-colors">
-                  futureschool786@gmail.com
-                </a>
-              </motion.li>
-            </motion.ul>
+    <motion.li variants={itemVariants} className="flex items-center justify-between">
+  <div className="flex items-center">
+    <FaMapMarkerAlt className="text-cyan-400 mr-2" />
+    <span>Jalal Town, Okara.</span>
+  </div>
+  <div className="flex items-center">
+    <FaPhone className="text-cyan-400 mr-2" />
+    <span>0442715620</span>
+  </div>
+</motion.li>
 
-            <motion.div variants={itemVariants} className="mt-8">
-              <h4 className="font-semibold mb-3 text-white">Send Email</h4>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="bg-gray-800 px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 w-full"
-                />
-                <button className="bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-2 rounded-r-lg font-medium hover:opacity-90 transition-opacity">
-                  Send
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
+
+
+    {/* Shabbir Campus */}
+    <motion.li variants={itemVariants} className="flex items-start">
+      <FaBuilding className="text-cyan-400 mt-1 mr-3 flex-shrink-0" />
+      <span>Shabbir Campus</span>
+    </motion.li>
+
+    <motion.li variants={itemVariants} className="flex items-center justify-between">
+  <div className="flex items-center">
+    <FaMapMarkerAlt className="text-cyan-400 mr-2" />
+    <span>Rauf Abad, Okara.</span>
+  </div>
+  <div className="flex items-center">
+    <FaPhone className="text-cyan-400 mr-2" />
+    <span>0442702080</span>
+  </div>
+</motion.li>
+    <motion.li variants={itemVariants} className="flex items-center">
+      <FaWhatsapp className="text-blue-400 mr-3" />
+      <a href="tel:+923112306050" className="hover:text-white transition-colors">
+        +92 3112306050
+      </a>
+    </motion.li>
+
+    <motion.li variants={itemVariants} className="flex items-center">
+      <FaEnvelope className="text-cyan-400 mr-3" />
+      <a href="mailto:futureschool786@gmail.com" className="hover:text-white transition-colors">
+        futureschool786@gmail.com
+      </a>
+    </motion.li>
+
+  </motion.ul> {/* ✅ now properly closed */}
+
+  <motion.div variants={itemVariants} className="mt-8">
+    <h4 className="font-semibold mb-3 text-white">Send Email</h4>
+    <div className="flex">
+      <input
+        type="email"
+        placeholder="Your email"
+        className="bg-gray-800 px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 w-full"
+      />
+      <button className="bg-gradient-to-r from-blue-600 to-cyan-500 px-4 py-2 rounded-r-lg font-medium hover:opacity-90 transition-opacity">
+        Send
+      </button>
+    </div>
+  </motion.div>
+</motion.div>
+
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">

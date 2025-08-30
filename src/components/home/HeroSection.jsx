@@ -118,7 +118,7 @@ const HeroSection = () => {
                   
                   className={`${bungee.className} text-2xl font-bold text-blue-600`}
                 >
-                  1000+
+                  1700+
                 </motion.div>
                 <motion.div
                   variants={itemVariants}
@@ -150,6 +150,7 @@ const HeroSection = () => {
                   Success Rate
                 </motion.div>
               </div>
+              
             </div>
           </div>
 
