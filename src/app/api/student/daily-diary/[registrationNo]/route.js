@@ -18,7 +18,7 @@ export async function GET(request, context) {
   campusName: { $in: [student.campusName, "All"] },
   section: { $in: [student.section, "All"] },
   type: "DailyDairy",
-});
+}).sort({ createdAt: -1 });
 
 
   return NextResponse.json({ success: true, diaries });
