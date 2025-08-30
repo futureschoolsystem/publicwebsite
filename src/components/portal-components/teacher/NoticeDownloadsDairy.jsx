@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 export default function UploadNotice() {
   const [form, setForm] = useState({
-    type: "Notice",
+    type: "Notices",
     heading: "",
     link: "",
     date: "",
@@ -50,7 +50,7 @@ export default function UploadNotice() {
       if (res.ok) {
         setMessage("✅ Notice saved successfully!");
         setForm({
-          type: "Notice",
+          type: "Notices",
           heading: "",
           link: "",
           date: "",
@@ -112,8 +112,8 @@ export default function UploadNotice() {
           onChange={(e) => setForm({ ...form, type: e.target.value })}
           className="border p-2 w-full rounded"
         >
-          <option value="DailyDairy">Daily Dairy</option>
           <option value="Notices">Notices</option>
+          <option value="DailyDairy">Daily Dairy</option>
           <option value="Downloads">Downloads</option>
         </select>
 

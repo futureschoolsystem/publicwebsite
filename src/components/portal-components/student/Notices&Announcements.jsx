@@ -15,7 +15,6 @@ export default function DailyDiary() {
           `/api/student/notices/${session.user.registrationNo}`
         );
         const data = await res.json();
-
         if (data.success && Array.isArray(data.notices)) {
           setNotices(data.notices);
         } else {

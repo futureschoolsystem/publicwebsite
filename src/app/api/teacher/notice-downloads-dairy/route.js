@@ -39,6 +39,7 @@ export async function GET() {
   try {
      connect(); 
     const notices = await NoticeDownloadDairy.find().sort({ date: -1 });
+    console.log(notices)
     return NextResponse.json({ success: true, notices });
   } catch (error) {
     return NextResponse.json(
