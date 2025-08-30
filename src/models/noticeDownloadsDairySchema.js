@@ -4,7 +4,7 @@ const noticeDownloadsDairySchema = new mongoose.Schema(
     type: {
       type: String,
       enum: [
-        "Notice",
+        "Notices",
         "DailyDairy",
         "Downloads",
       ],

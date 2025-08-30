@@ -16,6 +16,7 @@ export async function POST(req) {
         { status: 400 }
       );
     }
+    console.log(body);
     const notice = new NoticeDownloadDairy({
       type,
       heading,
@@ -39,7 +40,6 @@ export async function GET() {
   try {
      connect(); 
     const notices = await NoticeDownloadDairy.find().sort({ date: -1 });
-    console.log(notices)
     return NextResponse.json({ success: true, notices });
   } catch (error) {
     return NextResponse.json(
