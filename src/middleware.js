@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function middleware(req) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
   const { pathname } = req.nextUrl;
-   // Redirect authenticated users away from login page
+//    // Redirect authenticated users away from login page
  if (
   token &&
   (token.userName || token.registrationNo) &&
@@ -13,7 +13,8 @@ export async function middleware(req) {
   return NextResponse.redirect(new URL(`/${token.role}`, req.url));
 }
 
-  // Skip static files and Next.js internals
+
+//   // Skip static files and Next.js internals
   if (
     !pathname.startsWith("/student") &&
     !pathname.startsWith("/teacher") &&
@@ -52,7 +53,5 @@ if (pathname.startsWith("/teacher") && token.role !== "teacher") {
 if (pathname.startsWith("/admin") && token.role !== "admin") {
   return NextResponse.redirect(new URL("/login", req.url));
 }
-
-
   return NextResponse.next();
 }

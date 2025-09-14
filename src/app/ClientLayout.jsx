@@ -1,7 +1,7 @@
 'use client'; // 👈 This makes it a Client Component
 
 import { usePathname } from 'next/navigation';
-import TopHeader from '@/components/TopHeader';
+import TopHeader from 'TopHeader';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
