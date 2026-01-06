@@ -1,15 +1,15 @@
-'use client';
+'use client'
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Input({
+function Textarea({
   className,
   type,
   ...props
 }) {
   return (
-    <input
+    <textarea
       type={type}
       data-slot="input"
       className={cn(
@@ -22,4 +22,4 @@ function Input({
   );
 }
 
-export { Input }
+export { Textarea }

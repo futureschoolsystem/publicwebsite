@@ -2,7 +2,7 @@
 import { useState } from "react"
 import AdminSidebar from "@/components/portal-components/AdminSidebar"
 import AddGalleryPhotos from "@/components/portal-components/admin/AddGalleryPhotos"
-import AddEventsAndAnnouncements from "@/app/(...portals)/admin/AddEventsAndAnnouncements"
+import AddEventsAndAnnouncements from "@/components/portal-components/admin/AddEventsAndAnnouncements"
 
 const Page = () => {
   const [tab, setTab] = useState("gallery")
