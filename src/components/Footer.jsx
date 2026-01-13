@@ -105,11 +105,10 @@ function Footer() {
             <motion.ul variants={containerVariants} className="space-y-3">
               {[
                 { name: "Home", href: "/" },
-                { name: "About Us", href: "/about" },
+                { name: "About Us", href: "/about-us" },
                 { name: "Academics", href: "/academics" },
-                { name: "Admissions", href: "/admissions" },
-                { name: "Events", href: "/events" },
-                { name: "Contact", href: "/contact" }
+                { name: "Gallery", href: "/gallery" },
+                { name: "Contact", href: "/contact-us" }
               ].map((item, index) => (
                 <motion.li key={index} variants={itemVariants}>
                   <a
@@ -225,7 +224,7 @@ function Footer() {
 
   </motion.ul> {/* ✅ now properly closed */}
 
-  <motion.div variants={itemVariants} className="mt-8">
+  {/* <motion.div variants={itemVariants} className="mt-8">
     <h4 className="font-semibold mb-3 text-white">Send Email</h4>
     <div className="flex">
       <input
@@ -237,7 +236,7 @@ function Footer() {
         Send
       </button>
     </div>
-  </motion.div>
+  </motion.div> */}
 </motion.div>
 
         </div>

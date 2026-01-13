@@ -114,8 +114,7 @@ const page = () => {
         </div>
       </section>
 
-      {/* Floating WhatsApp Button */}
-      <WhatsAppButton />
+      
     </div>
   );
 };

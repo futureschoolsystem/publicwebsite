@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
+import Link from "next/link"
 import { motion, useInView } from "framer-motion"
 import {
   GraduationCap,
@@ -549,37 +550,15 @@ function App() {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center mb-10"
               >
-                <motion.a
-                  href="#"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-yellow-500 text-slate-950 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  Schedule Campus Visit
-                </motion.a>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-                className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-              >
-                <a
-                  href="tel:+923001234567"
-                  className="flex items-center gap-2 text-white/80 hover:text-yellow-400 transition-colors"
-                >
-                  <Phone className="w-4 h-4" />
-                  <span>+92 300 1234567</span>
-                </a>
-                <a
-                  href="mailto:info@futureschoolsystem.pk"
-                  className="flex items-center gap-2 text-white/80 hover:text-yellow-400 transition-colors"
-                >
-                  <Mail className="w-4 h-4" />
-                  <span>info@futureschoolsystem.pk</span>
-                </a>
+                <Link href="/contact-us" >
+  <motion.div
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.98 }}
+    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-yellow-500 text-slate-950 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+  >
+    Schedule Campus Visit
+  </motion.div>
+</Link>
               </motion.div>
             </div>
           </motion.div>
