@@ -296,7 +296,7 @@ export default function LoginForm() {
       </div>
 
       {/* Right - Image */}
-      <div className="hidden lg:block relative">
+      <div className="hidden lg:block relative rounded-l-4xl overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="/home/fssbuilding.jpg"
