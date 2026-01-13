@@ -34,7 +34,7 @@ const Navbar = () => {
     { href: "/about-us", label: "About Us" },
     { href: "/contact-us", label: "Contact Us" },
     { href: "/gallery", label: "Gallery" },
-    { href: "/events-and-announcements", label: "Events & Announcements" },
+    { href: "/academics", label: "Academics" },
   ];
 
   return (
@@ -125,11 +125,11 @@ const Navbar = () => {
                       className="group flex items-center bg-blue-800 hover:bg-blue-900 active:bg-blue-900  text-white px-4 py-2.5 rounded-full transition-colors duration-300"
                     >
                       <FaUser className="mr-2 text-sm group-hover:rotate-12 transition-transform duration-300" />
-                      <span className="font-medium text-sm">Login Portal</span>
+                      <span className="font-medium text-sm">Smart Portal</span>
                     </Link>
                   </div>
                 </div>
-              </SheetContent>
+              </SheetContent> 
             </Sheet>
           </div>
         </div>

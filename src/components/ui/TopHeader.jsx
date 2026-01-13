@@ -33,7 +33,7 @@ const TopHeader = () => {
               className="hidden lg:flex items-center bg-blue-700/50 hover:bg-blue-600 px-4 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105 group border border-blue-600/30 hover:border-blue-500"
             >
               <FaUser className="mr-2 text-sm group-hover:rotate-12 transition-transform duration-300" />
-              <span className="font-medium text-sm">Login Portal</span>
+              <span className="font-medium text-sm">Smart Portal</span>
             </Link>
           </div>
       </div>
