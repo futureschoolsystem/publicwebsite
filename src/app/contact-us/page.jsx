@@ -5,6 +5,7 @@ import ContactInfo from "@/components/ui/contactInfo";
 import ContactForm from "@/components/ui/contact-form";
 import {motion} from "framer-motion";
 
+
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
@@ -114,7 +115,7 @@ const page = () => {
         </div>
       </section>
 
-      
+       <WhatsAppButton />
     </div>
   );
 };

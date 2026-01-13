@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import TopHeader from '@/components/ui/TopHeader';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
 
@@ -20,6 +19,7 @@ export default function ClientLayout({ children }) {
       {children}
       
       {!shouldHideLayout && <Footer />}
+      
     </>
   );
 }

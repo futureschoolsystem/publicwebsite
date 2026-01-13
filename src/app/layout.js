@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import ClientLayout from "./ClientLayout";  
-import WhatsAppButton from "@/components/ui/whatsapp-button";
+import ClientLayout from "./ClientLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -124,7 +123,6 @@ export default function RootLayout({ children }) {
           {children}
           {/* Floating WhatsApp Button */}
         </ClientLayout>
-      <WhatsAppButton />
       </body>
     </html>
   );

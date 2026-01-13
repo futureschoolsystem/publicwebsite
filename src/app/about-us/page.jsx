@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { BookOpen, Users, Award, Heart, Star, Globe, GraduationCap, Building } from "lucide-react"
 import Link from "next/link"
+import WhatsAppButton from "@/components/ui/whatsapp-button"
+
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
@@ -547,6 +549,7 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </motion.section>
+       <WhatsAppButton />
     </div>
   )
 }

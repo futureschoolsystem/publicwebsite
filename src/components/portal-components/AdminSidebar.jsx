@@ -7,7 +7,6 @@ import Image from "next/image"
 
 const tabs = [
   { key: "gallery", label: "Add Gallery Photos", icon: <FaImages /> },
-  { key: "eventsandannouncements", label: "Add Events and Announcements", icon: <FaImages /> },
 ]
 
 const AdminSidebar = ({ setTab }) => {

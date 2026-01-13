@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { Calendar, Tag, X, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
+import WhatsAppButton from "@/components/ui/whatsapp-button";
+
 
 const GalleryPage = () => {
   const [galleryData, setGalleryData] = useState([]);
@@ -132,6 +134,7 @@ const GalleryPage = () => {
           }
         />
       )}
+      <WhatsAppButton />
     </motion.div>
   );
 };
