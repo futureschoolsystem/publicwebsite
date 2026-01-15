@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Poppins } from "next/font/google";
 import axios from "axios";
-import { fetchData } from "next-auth/client/_utils";
-import { set } from "mongoose";
 
 const poppins = Poppins({
   subsets: ["latin"],

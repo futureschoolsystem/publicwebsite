@@ -1,5 +1,8 @@
 "use client";
+import axios from "axios";
 import { useEffect, useState } from "react";
+import { Upload } from "lucide-react";
+import FilePreview from "../admin/file-preview";
 
 export default function UploadNotice() {
   const [form, setForm] = useState({
@@ -20,7 +23,15 @@ export default function UploadNotice() {
     section: "",
   });
 
-  // ✅ Fetch notices
+  const handleChange = (e) => {
+    setForm({ ...form, image: e.target.files[0] });
+  };
+
+  const removeFile = () => {
+    setForm({ ...form, image: null });
+  };
+
+  // Fetch notices
   const fetchNotices = async () => {
     try {
       const res = await fetch("/api/teacher/notice-downloads-dairy");
@@ -35,19 +46,21 @@ export default function UploadNotice() {
     fetchNotices();
   }, []);
 
-  // ✅ Handle submit
+  //  Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("Saving...");
-
     try {
-      const res = await fetch("/api/teacher/notice-downloads-dairy", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      if (res.ok) {
+      setMessage("Saving...");
+      const res = await axios.post(
+        "/api/teacher/notice-downloads-dairy",
+        form,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (res.status === 201) {
         setMessage("✅ Notice saved successfully!");
         setForm({
           type: "Notices",
@@ -57,18 +70,23 @@ export default function UploadNotice() {
           campusName: "",
           className: "",
           section: "",
+          image: null,
         });
         fetchNotices();
       } else {
-        const errorData = await res.json();
-        setMessage("❌ Error: " + (errorData.message || "Unable to save"));
+        setMessage("❌ Error saving notice");
       }
     } catch (err) {
-      setMessage("❌ Error saving notice: " + err.message);
+      // Axios error response is in err.response.data
+      if (err.response && err.response.data && err.response.data.message) {
+        setMessage("❌ Error: " + err.response.data.message);
+      } else {
+        setMessage("❌ Error saving notice: " + err.message);
+      }
     }
   };
 
-  // ✅ Delete notice
+  //  Delete notice
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this notice?")) return;
 
@@ -88,7 +106,7 @@ export default function UploadNotice() {
     }
   };
 
-  // ✅ Filtered notices
+  //  Filtered notices
   const filteredNotices = notices.filter(
     (n) =>
       (!filters.campusName || n.campusName === filters.campusName) &&
@@ -123,16 +141,6 @@ export default function UploadNotice() {
           placeholder="Heading"
           value={form.heading}
           onChange={(e) => setForm({ ...form, heading: e.target.value })}
-          className="border p-2 w-full rounded"
-          required
-        />
-
-        {/* Link */}
-        <input
-          type="url"
-          placeholder="Paste Google Drive Link"
-          value={form.link}
-          onChange={(e) => setForm({ ...form, link: e.target.value })}
           className="border p-2 w-full rounded"
           required
         />
@@ -198,7 +206,26 @@ export default function UploadNotice() {
           <option value="Green">Green</option>
           <option value="Pink">Pink</option>
         </select>
+        <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary transition-colors">
+          <input
+            type="file"
+            id="image"
+            className="hidden"
+            onChange={handleChange}
+          />
+          <label htmlFor="image" className="cursor-pointer">
+            <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
 
+            <p className="text-xs text-muted-foreground mt-1">
+              You can select multiple images
+            </p>
+          </label>
+          {form.image && (
+            <div className="space-y-2">
+              <FilePreview file={form.image} onRemove={removeFile} />
+            </div>
+          )}
+        </div>
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
@@ -216,7 +243,9 @@ export default function UploadNotice() {
         {/* Campus filter */}
         <select
           value={filters.campusName}
-          onChange={(e) => setFilters({ ...filters, campusName: e.target.value })}
+          onChange={(e) =>
+            setFilters({ ...filters, campusName: e.target.value })
+          }
           className="border p-2 rounded flex-1"
         >
           <option value="">All Campuses</option>
@@ -228,7 +257,9 @@ export default function UploadNotice() {
         {/* Class filter */}
         <select
           value={filters.className}
-          onChange={(e) => setFilters({ ...filters, className: e.target.value })}
+          onChange={(e) =>
+            setFilters({ ...filters, className: e.target.value })
+          }
           className="border p-2 rounded flex-1"
         >
           <option value="">All Classes</option>
@@ -259,7 +290,7 @@ export default function UploadNotice() {
           <option value="Green">Green</option>
           <option value="Pink">Pink</option>
         </select>
-          {/* Type filter */}
+        {/* Type filter */}
         <select
           value={filters.type}
           onChange={(e) => setFilters({ ...filters, type: e.target.value })}
@@ -274,7 +305,9 @@ export default function UploadNotice() {
 
       {/* ---------- TABLE ---------- */}
       <div className="bg-white shadow-lg rounded-2xl p-6 overflow-x-auto">
-        <h2 className="text-lg font-bold mb-4">📖 Saved Notices,Downloads & Dairy Links</h2>
+        <h2 className="text-lg font-bold mb-4">
+          📖 Saved Notices,Downloads & Dairy Links
+        </h2>
         <table className="table-auto w-full border">
           <thead>
             <tr className="bg-gray-100 text-left">
