@@ -72,7 +72,6 @@ export default function AddGalleryPhotos() {
     try {
       const res = await axios.post("/api/admin/gallery-photos", data);
       const result =res.data;
-      console.log("Gallery photos uploaded successfully:", result);
       setFormData({
         Heading: "",
         caption: "",

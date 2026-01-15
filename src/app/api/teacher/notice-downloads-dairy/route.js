@@ -12,7 +12,6 @@ export async function POST(req) {
     const { type, heading, date, campusName, className, section } =
       Object.fromEntries(body);
     const image = body.get("image");
-    console.log(image);
     if (
       !type ||
       !heading ||
@@ -57,10 +56,8 @@ export async function POST(req) {
       section,
     });
     await notice.save();
-    console.log("Saved notice:", notice);
     return NextResponse.json({ success: true, notice }, { status: 201 });
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       { success: false, message: "Error saving notice", error: error.message },
       { status: 500 }

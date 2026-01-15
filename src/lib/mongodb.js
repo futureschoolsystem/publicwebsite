@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 let isConnected = false;
 export async function connect() {
   if (isConnected) {
-    console.log("✅ Using existing MongoDB connection");
     return;
   }
 
@@ -15,7 +14,6 @@ export async function connect() {
     });
 
     isConnected = true;
-    console.log("✅ MongoDB connected successfully");
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);
     throw error;

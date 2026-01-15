@@ -9,7 +9,6 @@ connect();
 
 export async function POST(request) {
     try {
-  console.log("Login API called");
         const body = await request.json();
         if((body.userName==undefined &&body.registrationNo==undefined) || (body.password==undefined && body.contact==undefined) || body.role==undefined){
             return NextResponse.json({status:400,errors:"Please fill all fields"}, { status: 400 });
@@ -29,7 +28,6 @@ export async function POST(request) {
         }
         if(body.role==="admin" || body.role==="teacher"){
             const user = await User.findOne({ userName: body.userName,role:body.role })
-            console.log(user)
             if (!user) {
                 return NextResponse.json({status:400,errors:"Please enter Correct userName and Role"}, { status: 400 });
             }
