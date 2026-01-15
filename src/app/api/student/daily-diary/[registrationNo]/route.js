@@ -4,7 +4,7 @@ import { connect } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(request, context) {
-  const { registrationNo } = context.params; // no need for await here
+  const { registrationNo } =await context.params; // no need for await here
   await connect();
   const student = await Student.findOne({ registrationNo });
   if (!student) {

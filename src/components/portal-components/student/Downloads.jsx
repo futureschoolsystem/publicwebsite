@@ -3,9 +3,25 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function DailyDiary() {
-  const [downloads, setDownloads] = useState([]); // ✅ start with empty array
+  const [downloads, setDownloads] = useState([]);
   const [loading, setLoading] = useState(true);
   const { data: session, status } = useSession();
+
+  // Helper to download any file
+  async function downloadFile(url, filename) {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename || url.split("/").pop();
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Download failed", err);
+    }
+  }
 
   useEffect(() => {
     async function fetchDownloads() {
@@ -16,7 +32,6 @@ export default function DailyDiary() {
         );
         const data = await res.json();
 
-        // ✅ check if downloads is an array
         if (data.success && Array.isArray(data.downloads)) {
           setDownloads(data.downloads);
         } else {
@@ -24,7 +39,7 @@ export default function DailyDiary() {
         }
       } catch (error) {
         console.error("Error fetching downloads:", error);
-        setDownloads([]); // fallback
+        setDownloads([]);
       } finally {
         setLoading(false);
       }
@@ -43,96 +58,70 @@ export default function DailyDiary() {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">📘 Available Downloads</h2>
-      {(!downloads || downloads.length === 0) ? (  // ✅ safeguard
+      {!downloads || downloads.length === 0 ? (
         <p className="text-gray-500">No Data found.</p>
       ) : (
         <div className="space-y-4">
-          {downloads.map((diary) => (
-            <div
-              key={diary._id}
-              className="p-4 border rounded-lg shadow bg-white"
-            >
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>{new Date(diary.date).toLocaleDateString()}</span>
-              </div>
+          {downloads.map((item) => {
+            const url = item.link || "";
+            const isImage = url.match(/\.(jpeg|jpg|png|gif|webp)$/i);
+            const isPDF = url.match(/\.pdf$/i);
 
-              <h3 className="text-lg font-semibold mt-2">{diary.heading}</h3>
-
-              {/* Attachments */}
-              {diary.link && (
-                <div className="mt-3 space-y-2">
-                  {(() => {
-                    const url = diary.link;
-                    const isImage = url.match(/\.(jpeg|jpg|png|gif)$/i);
-                    const isPDF = url.match(/\.pdf$/i);
-                    const isDrive = url.includes("drive.google.com");
-
-                    if (isImage) {
-                      return (
-                        <div>
-                          <p className="text-xs text-gray-500 mb-1">
-                            📌 Click on the arrow in the top-right to download
-                          </p>
-                          <a
-                            href="https://drive.google.com/file/d/FILE_ID/view"
-                            target="_self"
-                          >
-                            <img
-                              src={url}
-                              alt="Attachment"
-                              className="max-h-60 rounded shadow cursor-pointer hover:opacity-80"
-                            />
-                          </a>
-                        </div>
-                      );
-                    } else if (isPDF) {
-                      return (
-                        <div>
-                          <p className="text-xs text-gray-500 mb-1">
-                            📌 Click on the arrow in the top-right to download
-                          </p>
-                          <a href={url} target="_self">
-                            <iframe
-                              src={url}
-                              className="w-full h-60 rounded cursor-pointer"
-                            ></iframe>
-                          </a>
-                        </div>
-                      );
-                    } else if (isDrive) {
-                      return (
-                        <div>
-                          <p className="text-xs text-black animate-bounce mb-1">
-                            📌 Click on the arrow in the top-right to download
-                          </p>
-                          <a href={url} target="_self">
-                            <iframe
-                              src={url.replace(
-                                "/view?usp=drive_link",
-                                "/preview"
-                              )}
-                              className="w-full h-60 rounded cursor-pointer"
-                            ></iframe>
-                          </a>
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block text-blue-600 hover:underline text-sm"
-                        >
-                          📎 Attachment
-                        </a>
-                      );
-                    }
-                  })()}
+            return (
+              <div
+                key={item._id}
+                className="p-4 border rounded-lg shadow bg-white"
+              >
+                <div className="flex justify-between text-sm text-gray-600">
+                  <span>{new Date(item.date).toLocaleDateString()}</span>
                 </div>
-              )}
-            </div>
-          ))}
+
+                <h3 className="text-lg font-semibold mt-2">{item.heading}</h3>
+
+                {/* Attachments */}
+                {url && (
+                  <div className="mt-3 space-y-2">
+                    {isImage ? (
+                      <div className="relative">
+                        <img
+                          src={url}
+                          alt="Attachment"
+                          className="max-h-60 rounded shadow cursor-pointer hover:opacity-80"
+                        />
+                        <button
+                          onClick={() => downloadFile(url)}
+                          className="m-2 ml-3 bg-white p-2 rounded shadow text-xs text-gray-800 hover:bg-gray-100"
+                        >
+                          ⬇️ Download
+                        </button>
+                      </div>
+                    ) : isPDF ? (
+                      <div className="relative">
+                        <iframe
+                          src={url}
+                          className="w-full h-60 rounded"
+                          title="PDF Preview"
+                        ></iframe>
+                        <button
+                          onClick={() => downloadFile(url)}
+                          className="m-2 ml-3 bg-white p-2 rounded shadow text-xs text-gray-800 hover:bg-gray-100"
+                        >
+                          ⬇️ Download
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => downloadFile(url)}
+                        className="block text-blue-600 hover:underline text-sm"
+                      >
+                        📎 Download Attachment
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

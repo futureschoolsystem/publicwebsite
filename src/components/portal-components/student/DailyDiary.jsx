@@ -7,6 +7,22 @@ export default function DailyDiary() {
   const [loading, setLoading] = useState(true);
   const { data: session, status } = useSession();
 
+  // Helper to download any file
+  async function downloadFile(url, filename) {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename || url.split("/").pop();
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error("Download failed", err);
+    }
+  }
+
   useEffect(() => {
     async function fetchDiaries() {
       if (status !== "authenticated") return;
@@ -53,72 +69,52 @@ export default function DailyDiary() {
 
               {/* Attachments */}
               {diary.link && (
-                <div className="mt-3 space-y-2">
+                <div className="mt-2 space-y-2">
                   {(() => {
                     const url = diary.link;
-                    const isImage = url.match(/\.(jpeg|jpg|png|gif)$/i);
+                    const isImage = url.match(/\.(jpeg|jpg|png|gif|webp)$/i);
                     const isPDF = url.match(/\.pdf$/i);
-                    const isDrive = url.includes("drive.google.com");
 
                     if (isImage) {
                       return (
-                        <div>
-                          <p className="text-xs text-gray-500 mb-1">
-                            📌 Click on the arrow in the top-right to download
-                          </p>
-                          <a
-                            href={url}
-                            target="_self"
+                        <div className="relative">
+                          <img
+                            src={url}
+                            alt="Attachment"
+                            className="max-h-60 rounded shadow cursor-pointer hover:opacity-80"
+                          />
+                          <button
+                            onClick={() => downloadFile(url)}
+                            className="m-2 ml-3 bg-white p-2 rounded shadow text-xs text-gray-800 hover:bg-gray-100"
                           >
-                            <img
-                              src={url}
-                              alt="Attachment"
-                              className="max-h-60 rounded shadow cursor-pointer hover:opacity-80"
-                            />
-                          </a>
+                            ⬇️ Download
+                          </button>
                         </div>
                       );
                     } else if (isPDF) {
                       return (
-                        <div>
-                          <p className="text-xs text-gray-500 mb-1">
-                            📌 Click on the arrow in the top-right to download
-                          </p>
-                          <a href={url} target="_self">
-                            <iframe
-                              src={url}
-                              className="w-full h-60 rounded cursor-pointer"
-                            ></iframe>
-                          </a>
-                        </div>
-                      );
-                    } else if (isDrive) {
-                      return (
-                        <div>
-                          <p className="text-xs text-black animate-bounce mb-1" >
-                            📌 Click on the arrow in the top-right to download
-                          </p>
-                          <a href={url} target="_self">
-                            <iframe
-                              src={url.replace(
-                                "/view?usp=drive_link",
-                                "/preview"
-                              )}
-                              className="w-full h-60 rounded cursor-pointer"
-                            ></iframe>
-                          </a>
+                        <div className="relative">
+                          <iframe
+                            src={url}
+                            className="w-full h-60 rounded"
+                            title="PDF Preview"
+                          ></iframe>
+                          <button
+                            onClick={() => downloadFile(url)}
+                           className="m-2 ml-3 bg-white p-2 rounded shadow text-xs text-gray-800 hover:bg-gray-100"
+                          >
+                            ⬇️ Download
+                          </button>
                         </div>
                       );
                     } else {
                       return (
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <button
+                          onClick={() => downloadFile(url)}
                           className="block text-blue-600 hover:underline text-sm"
                         >
-                          📎 Attachment
-                        </a>
+                          📎 Download Attachment
+                        </button>
                       );
                     }
                   })()}
