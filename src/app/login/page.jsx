@@ -23,6 +23,7 @@ import { Eye, EyeOff, User, Lock, UserCheck } from "lucide-react";
 import Image from "next/image";
 import {signIn} from 'next-auth/react';
 import axios from "axios";
+import Link from "next/link";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -110,9 +111,19 @@ export default function LoginForm() {
       {/* Left - Form */}
       <div className="flex items-center justify-center py-4 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-sm space-y-4">
-          <div className="text-center ">
-            <h1 className="text-3xl font-bold tracking-tight">Welcome </h1>
-            <p className="text-muted-foreground">Sign in to your account</p>
+          
+          <div>
+            <h1>
+  <Link
+    href="/"
+    className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:bg-blue-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+  >
+    Return Home
+  </Link>
+</h1>
+
+            <h1 className="text-3xl text-center font-bold tracking-tight">Welcome </h1>
+            <p className="text-muted-foreground text-center">Sign in to your account</p>
           </div>
 
           <Card>
@@ -123,7 +134,7 @@ export default function LoginForm() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3">
                 {error && (
                   <Alert variant="destructive">
                     <AlertDescription>{error}</AlertDescription>
@@ -131,7 +142,7 @@ export default function LoginForm() {
                 )}
 
                 {/* Role */}
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label htmlFor="role">Select Your Role</Label>
                   <Select
                     value={formData.role}
@@ -270,7 +281,7 @@ export default function LoginForm() {
 
                 {/* Info Box */}
                 {formData.role && (
-                  <div className="mt-4 p-3 bg-muted rounded-lg text-sm flex items-start gap-2">
+                  <div className=" p-3 bg-muted rounded-lg text-sm flex items-start gap-2">
                     {getRoleIcon()}
                     <span className="text-muted-foreground">
                       {getRoleDescription()}

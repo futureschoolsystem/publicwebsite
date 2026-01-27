@@ -2,7 +2,7 @@
 import { useState } from "react"
 import AdminSidebar from "@/components/portal-components/AdminSidebar"
 import AddGalleryPhotos from "@/components/portal-components/admin/AddGalleryPhotos"
-
+import MainPageBanner from "@/components/portal-components/admin/MainPageBanner"
 const Page = () => {
   const [tab, setTab] = useState("gallery")
   return (
@@ -12,6 +12,7 @@ const Page = () => {
         <main className="flex-1 md:ml-0 p-4 md:p-8">
           <div className="max-w-4xl mx-auto">
             {tab === "gallery" && <AddGalleryPhotos />}
+            {tab === "mainPageBanner" && <MainPageBanner/>}
           </div>
         </main>
       </div>
