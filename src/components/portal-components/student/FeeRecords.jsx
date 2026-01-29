@@ -11,7 +11,7 @@ const FeeRecords = () => {
   const [student, setStudent] = useState(null);
   const [otherCharges, setOtherCharges] = useState([]);
   const [loading, setLoading] = useState(true);
-  const photoUrl = student?.photoUrl || "";
+  const photoUrl = student?.photoUrl || "/profilelogo.jpg";
   const arrears = feeRecords.reduce(
     (acc, record) =>
       acc + (record.status === "Unpaid" ? record.totalFee : 0),
