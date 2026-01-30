@@ -12,15 +12,12 @@ const FeeRecords = () => {
   const [otherCharges, setOtherCharges] = useState([]);
   const [loading, setLoading] = useState(true);
   const photoUrl = student?.photoUrl || "/profilelogo.jpg";
-  const arrears = feeRecords.reduce(
-    (acc, record) =>
-      acc + (record.status === "Unpaid" ? record.totalFee : 0),
-    0
-  );
-  const otherTotal = otherCharges.reduce(
-    (acc, charge) => acc + charge.amount,
-    0
-  );
+  const arrears = feeRecords.filter((record) => record.status !== "Paid")
+       // or record.isPaid === false
+        .reduce((sum, record) => sum + ((record.feeAmount ||record.totalFee) -(record.paidFeeAmount || 0)-record.discountAmount || 0), 0);
+  const otherTotal = otherCharges
+        .filter((record) => record.status !== "Paid")
+        .reduce((sum, record) => sum + (record.amount - (record.amountPaid || 0) || 0), 0);
 
   useEffect(() => {
     async function fetchFeeData() {
@@ -31,7 +28,7 @@ const FeeRecords = () => {
             `/api/student/fee-records/${session.user.registrationNo}`
           );
           setFeeRecords(res.data.feeRecords);
-          setOtherCharges(res.data.otherCharges);
+          setOtherCharges(res.data.otherCharges.filter((record) => record.status === "Unpaid"));
           setStudent(res.data.student);
         } catch (error) {
           console.error("Fee fetch error:", error);
