@@ -64,12 +64,10 @@ export default function FeeVoucher({
       <div class="my-1 space-y-2">
         <h2 class="text-center text-sm font-bold">BILLING MONTH - ${feeRecords.at(-1)?.month.toUpperCase() || "JANUARY"}</h2> 
         <div class="flex  flex-row justify-between border-b border-black border-t py-0.5 text-xs">
-         <!-- <div class="flex-1 text-left">Issue Date: <strong>${new Date(`${feeRecords.at(-1)?.month} 1, ${feeRecords.at(-1)?.year}`).toLocaleDateString()}</strong></div> -->
-          <div class="flex-1 text-left">Issue Date: <strong>1/1/2026</strong></div> 
-       <!-- <div class="flex-1 text-right">Due Date:<strong> ${new Date(`${feeRecords.at(-1)?.month} 10, ${feeRecords.at(-1)?.year}`).toLocaleDateString()
-          }</strong></div> -->
-
-<div class="flex-1 text-right">Due Date:<strong> 1/10/2026 </strong></div>
+         <div class="flex-1 text-left">Issue Date: <strong>${new Date(`${feeRecords.at(-1)?.month} 1, ${feeRecords.at(-1)?.year}`).toLocaleDateString()}</strong></div> 
+         
+       <div class="flex-1 text-right">Due Date:<strong> ${new Date(`${feeRecords.at(-1)?.month} 10, ${feeRecords.at(-1)?.year}`).toLocaleDateString()
+          }</strong></div> 
           
         </div>
 
