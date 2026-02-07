@@ -19,8 +19,20 @@ const noticeDownloadsDairySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    publicId: {
+      type: String,
+    },
+    resourceType: {
+      type: String,
+    },
+    format: {
+      type: String,
+    },
+    originalFilename: {
+      type: String,
+    },
     date: {
-      type: String, // manual input like "25-08-2025"
+      type: String, 
       required: true,
     },
     campusName: {
