@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { connect } from "@/lib/mongodb";
 import Student from "@/models/studentSchema";
 import StudentMarks from "@/models/testschema";
+import ResultPublishPermission from "@/models/resultPublishPermessionSchema";
+import Fee from "@/models/feeSchema";
+import OtherFeePayment from "@/models/otherFeeSchema";
+
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -16,7 +20,18 @@ export async function GET(request) {
   }
 
   await connect();
+  let year= new Date().getFullYear().toString();
+  if(testType !== "Second Term") {
+    year= (new Date().getFullYear() - 1).toString();
+  }
 
+  const permission = await ResultPublishPermission.findOne({ year, testType });
+  if (!permission) {
+    return NextResponse.json({
+      success: false,
+      message: "Results are not published yet.",
+    });
+  }
   // Find the student
   const student = await Student.findOne({ registrationNo });
   if (!student) {
@@ -26,10 +41,31 @@ export async function GET(request) {
     });
   }
 
-  // Determine the year
-  const currentYear = new Date().getFullYear();
-  const year = testType === "Second Term" ? currentYear : currentYear - 1;
+if (permission.stopFeeDefaultersResult) {
+  // Fetch the student with populated fee records
+  const studentWithFees = await Student.findById(student._id)
+    .populate("feeRecords") // Populate Fee documents
+    .populate("otherFeeChargesRecords"); // Populate OtherFeePayment documents
 
+  // Check if any Fee records are unpaid
+  const hasUnpaidFeeRecords = studentWithFees.feeRecords.some(
+    (fee) => fee.status === "Unpaid"
+  );
+
+  // Check if any Other Fee records are unpaid
+  const hasUnpaidOtherFees = studentWithFees.otherFeeChargesRecords.some(
+    (otherFee) => otherFee.status === "Unpaid"
+  );
+
+  if (hasUnpaidFeeRecords || hasUnpaidOtherFees) {
+    return NextResponse.json({
+      success: false,
+      message:
+        "Results are not available due to unpaid fees. Please clear your dues to access the results.",
+    });
+  }
+}
+  
   // Fetch the requested academic record
   const record = await StudentMarks.findOne({
     student_id: student._id.toString(),
@@ -38,7 +74,6 @@ export async function GET(request) {
   });
 
   if (!record) {
-    console.log("No academic records found.");
     return NextResponse.json({
       success: false,
       message: "No academic records found for the specified test type and year.",
