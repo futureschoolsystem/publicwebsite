@@ -21,6 +21,7 @@ const Academics = () => {
       return;
     }
     if(selectedTestType === "Second Term"){
+      console.log("Received data for second term:", response.data.result);
       printResultCardsForSecondTerm(response.data.result);
     }
     else {
@@ -85,6 +86,10 @@ function printResultCardsForSecondTerm(data) {
     let firstTermObtainedMarks=0;
     let secondTermTotalMarks=0;
     let secondTermObtainedMarks=0;
+    let deviderForTotalPercentage=1;
+    if(firstTermTestResults.length > 0 && testResults.length > 0){
+      deviderForTotalPercentage=2;
+    }
 let percentage1=0;
 let percentage2=0;
     htmlContent += `
@@ -144,7 +149,6 @@ let percentage2=0;
       sub.marks_obtained === "A" || sub.marks_obtained === "a"
         ? 0
         : Number(sub.marks_obtained) || 0;
-
     const total = Number(sub.totalMarks) || 0;
     const obtained = isNaN(Number(sub.marks_obtained))
       ? 0
@@ -184,6 +188,7 @@ let percentage2=0;
             <table class="w-full border border-black text-sm mb-2">
               <thead>
                 <tr>
+                  <th class="border border-black px-2 py-1">Subjects</th>
                   <th class="border border-black px-2 py-1">Total Marks</th>
                   <th class="border border-black px-2 py-1">Obtained Marks</th>
                 </tr>
@@ -202,6 +207,7 @@ let percentage2=0;
                       percentage2= secondTermTotalMarks ? (secondTermObtainedMarks/secondTermTotalMarks)*100 :0;
                     return `
                       <tr>
+                        <td class="border text-center border-black px-2 py-1">${sub.subject}</td>
                         <td class="border text-center border-black px-2 py-1">${sub.totalMarks}</td>
                         <td class="border text-center border-black px-2 py-1">${isNaN(Number(sub.marks_obtained)) ? sub.marks_obtained : marks.toFixed(2)}</td>
                         
@@ -251,7 +257,7 @@ let percentage2=0;
                 <td class="border  border-black px-2 py-1"><b>Second Term</b></td>
                 <td class="border text-center border-black px-2 py-1"><b>${secondTermTotalMarks}</b></td>
                 <td class="border text-center border-black px-2 py-1"><b>${secondTermObtainedMarks}</b></td>
-                <td class="border text-center border-black px-2 py-1">${percentage2}</td>
+                <td class="border text-center border-black px-2 py-1">${percentage2.toFixed(2)}</td>
                 <td class="border text-center border-black px-2 py-1">${
                     percentage2 >= 90
                       ? "A+"
@@ -273,19 +279,19 @@ let percentage2=0;
                 <td class="border border-black px-2 py-1"><b>Grand Total</b></td>
                 <td class="border text-center border-black px-2 py-1"><b>${firstTermTotalMarks+secondTermTotalMarks}</b></td>
                 <td class="border text-center border-black px-2 py-1"><b>${firstTermObtainedMarks+secondTermObtainedMarks}</b></td>
-                 <td class="border text-center border-black px-2 py-1"><b>${percentage1+percentage1/2}</b></td>
+                 <td class="border text-center border-black px-2 py-1"><b>${(deviderForTotalPercentage > 0 ? ((percentage1 + percentage2) / deviderForTotalPercentage).toFixed(2) : 0)}</b></td>
                  <td class="border text-center border-black px-2 py-1">${
-                    percentage1+percentage2/2 >= 90
+                    (deviderForTotalPercentage > 0 ? ((percentage1 + percentage2) / deviderForTotalPercentage) : 0) >= 90
                       ? "A+"
-                      : percentage1+percentage2/2 >= 80
+                      : (deviderForTotalPercentage > 0 ? ((percentage1 + percentage2) / deviderForTotalPercentage) : 0) >= 80
                         ? "A"
-                        : percentage1+percentage2/2 >= 70
+                        : (deviderForTotalPercentage > 0 ? ((percentage1 + percentage2) / deviderForTotalPercentage) : 0) >= 70
                           ? "B"
-                          : percentage1+percentage2/2 >= 60
+                          : (deviderForTotalPercentage > 0 ? ((percentage1 + percentage2) / deviderForTotalPercentage) : 0) >= 60
                             ? "C"
-                            : percentage1+percentage2/2 >= 50
+                            : (deviderForTotalPercentage > 0 ? ((percentage1 + percentage2) / deviderForTotalPercentage) : 0) >= 50
                               ? "D"
-                              : percentage1+percentage2/2 >= 40
+                              : (deviderForTotalPercentage > 0 ? ((percentage1 + percentage2) / deviderForTotalPercentage) : 0) >= 40
                                 ? "E"
                                 : "F"
                   }

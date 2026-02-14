@@ -84,7 +84,7 @@ if (permission.stopFeeDefaultersResult) {
   let firstTermRecord = null;
   if (testType === "Second Term") {
     firstTermRecord = await StudentMarks.findOne({
-      student_id: student._id.toString(),
+      student_id: student._id,
       testType: "First Term",
       year: year - 1,
     });
