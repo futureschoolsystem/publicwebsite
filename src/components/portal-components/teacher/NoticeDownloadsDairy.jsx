@@ -3,6 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Upload } from "lucide-react";
 import FilePreview from "../admin/file-preview";
+import { set } from "mongoose";
 
 export default function UploadNotice() {
   const [form, setForm] = useState({
@@ -22,6 +23,7 @@ export default function UploadNotice() {
     className: "",
     section: "",
   });
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleChange = (e) => {
     setForm({ ...form, image: e.target.files[0] });
@@ -48,43 +50,73 @@ export default function UploadNotice() {
 
   //  Handle submit
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setMessage("Saving...");
-      const res = await axios.post(
-        "/api/teacher/notice-downloads-dairy",
-        form,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      if (res.status === 201) {
-        setMessage("✅ Notice saved successfully!");
-        setForm({
-          type: "Notices",
-          heading: "",
-          link: "",
-          date: "",
-          campusName: "",
-          className: "",
-          section: "",
-          image: null,
-        });
-        fetchNotices();
-      } else {
-        setMessage("❌ Error saving notice");
-      }
-    } catch (err) {
-      // Axios error response is in err.response.data
-      if (err.response && err.response.data && err.response.data.message) {
-        setMessage("❌ Error: " + err.response.data.message);
-      } else {
-        setMessage("❌ Error saving notice: " + err.message);
-      }
+  e.preventDefault();
+
+  try {
+    setMessage("Uploading file...");
+
+    // 1️⃣ Upload file directly to Cloudinary
+   
+    const formData = new FormData();
+formData.append("file", form.image);
+formData.append("upload_preset", "notice_upload"); // MUST match your unsigned preset
+let uploadRes;
+try {
+   uploadRes = await axios.post(
+    "https://api.cloudinary.com/v1_1/dagiof5zp/auto/upload",
+    formData,
+    {
+      onUploadProgress: (progressEvent) => {
+        const percent = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        setUploadProgress(percent); // update your progress bar
+      },
     }
-  };
+  );
+
+} catch (err) {
+  console.error("Upload failed:", err.response?.data || err.message);
+  setMessage("❌ Upload failed: " + (err.response?.data?.error?.message || err.message));
+  return;
+}
+    const fileUrl = uploadRes.data.secure_url;
+    const publicId = uploadRes.data.public_id;
+    setUploadProgress(0)
+    setMessage("Saving notice...");
+
+    // 2️⃣ Send only link + data to backend
+    const res = await axios.post("/api/teacher/notice-downloads-dairy", {
+      type: form.type,
+      heading: form.heading,
+      link: fileUrl,
+      publicId: publicId,
+      date: form.date,
+      campusName: form.campusName,
+      className: form.className,
+      section: form.section,
+    });
+
+    if (res.status === 201) {
+      setMessage("✅ Notice saved successfully!");
+
+      setForm({
+        type: "Notices",
+        heading: "",
+        link: "",
+        date: "",
+        campusName: "",
+        className: "",
+        section: "",
+        image: null,
+      });
+
+      fetchNotices();
+    }
+  } catch (err) {
+    setMessage("❌ Error: " + err.message);
+  }
+};
 
   //  Delete notice
   const handleDelete = async (id) => {
@@ -236,6 +268,22 @@ export default function UploadNotice() {
         {message && (
           <p className="text-center text-sm text-gray-600">{message}</p>
         )}
+
+        {uploadProgress > 0 && (
+  <div className="w-full mt-3">
+    <div className="flex justify-between text-sm mb-1">
+      <span>Uploading...</span>
+      <span>{uploadProgress}%</span>
+    </div>
+
+    <div className="w-full bg-gray-200 rounded-full h-3">
+      <div
+        className="bg-blue-600 h-3 rounded-full transition-all duration-200"
+        style={{ width: `${uploadProgress}%` }}
+      ></div>
+    </div>
+  </div>
+)}
       </form>
 
       {/* ---------- FILTERS ---------- */}

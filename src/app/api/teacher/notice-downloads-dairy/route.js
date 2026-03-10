@@ -8,76 +8,22 @@ import cloudinary from "@/config/cloudinary";
 export async function POST(req) {
   try {
     await connect();
+    const body = await req.json();
 
-    const body = await req.formData();
-    const { type, heading, date, campusName, className, section } =
-      Object.fromEntries(body);
+    const { type, heading, link,publicId, date, campusName, className, section } = body;
 
-    const file = body.get("image"); // can be pdf or image
-
-    if (!type || !heading || !file || !date || !campusName || !className || !section) {
+    if (!type || !heading || !link || !publicId || !date || !campusName || !className || !section) {
       return NextResponse.json(
         { success: false, message: "All fields are required" },
         { status: 400 }
       );
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // 🔥 Get original filename and extension
-    const originalFilename = file.name;
-    const fileExtension = originalFilename.split('.').pop().toLowerCase();
-
-    // 🔥 Detect file type
-    const isPDF = file.type === "application/pdf" || fileExtension === "pdf";
-    const isVideo = file.type.startsWith("video/");
-    const isImage = file.type.startsWith("image/");
-
-    // Determine resource type
-    // PDFs and docs go as "raw" — images and videos use their own types
-    let resourceType = "raw"; // Default for PDFs, docx, xlsx, etc.
-    if (isVideo) resourceType = "video";
-    if (isImage) resourceType = "image";
-
-    const uploadResult = await new Promise((resolve, reject) => {
-      const uploadOptions = {
-        folder: "notice_downloads_dairy",
-        resource_type: resourceType,
-        public_id: `${Date.now()}_${originalFilename.replace(/\.[^/.]+$/, "")}`, // Use original name without extension
-        use_filename: false, // Don't use Cloudinary's filename logic
-        unique_filename: false, // Use our custom public_id
-        access_mode: "public",
-        type: "upload", // Explicitly set upload type
-      };
-
-      // 🔥 Force original format for ALL resource types
-      uploadOptions.format = fileExtension;
-
-      const stream = cloudinary.uploader.upload_stream(
-        uploadOptions,
-        (error, result) => {
-          if (error) {
-            console.error("Cloudinary upload error:", error);
-            reject(error);
-          } else {
-            resolve(result);
-          }
-        }
-      );
-
-      stream.end(buffer);
-    });
-
-    // 🔥 Store original filename and extension
     const notice = new NoticeDownloadDairy({
       type,
       heading,
-      link: uploadResult.secure_url,
-      publicId: uploadResult.public_id,
-      resourceType: uploadResult.resource_type,
-      format: uploadResult.format || fileExtension,
-      originalFilename: originalFilename,
+      link,
+      publicId,
       date,
       campusName,
       className,
@@ -85,16 +31,21 @@ export async function POST(req) {
     });
 
     await notice.save();
-
-    return NextResponse.json({ success: true, notice }, { status: 201 });
-  } catch (error) {
-    console.error("Upload error:", error);
     return NextResponse.json(
-      { success: false, message: "Error saving notice", error: error.message },
+      { success: true, notice },
+      { status: 201 }
+    );
+
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      { success: false, message: "Error saving notice" },
       { status: 500 }
     );
   }
 }
+
 
 // GET: Fetch All Notices
 export async function GET() {
