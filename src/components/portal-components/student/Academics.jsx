@@ -9,7 +9,7 @@ const Academics = () => {
       try{
     e.preventDefault();
     const selectedTestType = e.target.value;
-    console.log("Selected Test Type:", selectedTestType, session.user.registrationNo);
+   
     const response= await axios.get('/api/student/academics',
       {params: {
         registrationNo: session.user.registrationNo,
@@ -21,7 +21,6 @@ const Academics = () => {
       return;
     }
     if(selectedTestType === "Second Term"){
-      console.log("Received data for second term:", response.data.result);
       printResultCardsForSecondTerm(response.data.result);
     }
     else {

@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { FaUser, FaMoneyBill, FaBook, FaCalendarCheck, FaBars, FaTimes, FaBell, FaDownload } from "react-icons/fa"
+import { FaUser, FaMoneyBill, FaBook, FaCalendarCheck, FaBars, FaTimes, FaBell, FaDownload, FaVideo } from "react-icons/fa"
 import { cn } from "@/lib/utils"
 import SignoutButton from "./SignoutButton"
 import Image from "next/image"
@@ -8,11 +8,15 @@ import Image from "next/image"
 const tabs = [
   { key: "PersonalInformation", label: "Personal Information", icon: <FaUser /> },
   { key: "FeeRecords", label: "Fee History", icon: <FaMoneyBill /> },
-  { key: "DailyDiary", label: "Daily Diary", icon: <FaBook /> },
   { key: "AcademicRecords", label: "Academic Records", icon: <FaBook /> },
-  { key: "AttendanceInfo", label: "Attendance Info", icon: <FaCalendarCheck /> },
+  { key: "DailyDiary", label: "Daily Diary", icon: <FaBook /> },
+  { key: "Lectures", label: "Online Lectures", icon: <FaVideo /> },
   { key: "Notices&Announcements", label: "Notices & Announcements", icon: <FaBell /> },
+  { key: "DateSheet", label: "Date Sheet", icon: <FaBell /> },
+  { key: "TimeTable", label: "Time Table", icon: <FaBell /> },
+  { key: "Syllabus", label: "Syllabus", icon: <FaBell /> },
   { key: "Downloads", label: "Downloads", icon: <FaDownload /> },
+  { key: "AttendanceInfo", label: "Attendance Info", icon: <FaCalendarCheck /> },
 ]
 
 const Sidebar = ({ setTab }) => {

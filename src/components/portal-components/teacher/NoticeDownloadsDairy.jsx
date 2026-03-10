@@ -1,9 +1,8 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useRef } from "react";
 import { Upload } from "lucide-react";
 import FilePreview from "../admin/file-preview";
-import { set } from "mongoose";
 
 export default function UploadNotice() {
   const [form, setForm] = useState({
@@ -16,6 +15,7 @@ export default function UploadNotice() {
     section: "",
   });
 
+  const fileInputRef=useRef(null);
   const [message, setMessage] = useState("");
   const [notices, setNotices] = useState([]);
   const [filters, setFilters] = useState({
@@ -46,77 +46,90 @@ export default function UploadNotice() {
 
   useEffect(() => {
     fetchNotices();
+    const today = new Date().toLocaleDateString("en-CA", {
+      timeZone: "Asia/Karachi",
+    });
+    setForm((pre) => ({
+      ...pre,
+      date: today,
+    }));
   }, []);
 
   //  Handle submit
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    setMessage("Uploading file...");
+    try {
+      setMessage("Uploading file...");
 
-    // 1️⃣ Upload file directly to Cloudinary
-   
-    const formData = new FormData();
-formData.append("file", form.image);
-formData.append("upload_preset", "notice_upload"); // MUST match your unsigned preset
-let uploadRes;
-try {
-   uploadRes = await axios.post(
-    "https://api.cloudinary.com/v1_1/dagiof5zp/auto/upload",
-    formData,
-    {
-      onUploadProgress: (progressEvent) => {
-        const percent = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
+      // 1️⃣ Upload file directly to Cloudinary
+
+      const formData = new FormData();
+      formData.append("file", form.image);
+      formData.append("upload_preset", "notice_upload"); // MUST match your unsigned preset
+      let uploadRes;
+      try {
+        uploadRes = await axios.post(
+          "https://api.cloudinary.com/v1_1/dagiof5zp/auto/upload",
+          formData,
+          {
+            onUploadProgress: (progressEvent) => {
+              const percent = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total,
+              );
+              setUploadProgress(percent); // update your progress bar
+            },
+          },
         );
-        setUploadProgress(percent); // update your progress bar
-      },
-    }
-  );
+      } catch (err) {
+        setMessage(
+          "❌ Upload failed: " +
+            (err.response?.data?.error?.message || err.message),
+        );
+        return;
+      }
+      const fileUrl = uploadRes.data.secure_url;
+      const publicId = uploadRes.data.public_id;
+      setUploadProgress(0);
+      setMessage("Saving notice...");
 
-} catch (err) {
-  console.error("Upload failed:", err.response?.data || err.message);
-  setMessage("❌ Upload failed: " + (err.response?.data?.error?.message || err.message));
-  return;
-}
-    const fileUrl = uploadRes.data.secure_url;
-    const publicId = uploadRes.data.public_id;
-    setUploadProgress(0)
-    setMessage("Saving notice...");
-
-    // 2️⃣ Send only link + data to backend
-    const res = await axios.post("/api/teacher/notice-downloads-dairy", {
-      type: form.type,
-      heading: form.heading,
-      link: fileUrl,
-      publicId: publicId,
-      date: form.date,
-      campusName: form.campusName,
-      className: form.className,
-      section: form.section,
-    });
-
-    if (res.status === 201) {
-      setMessage("✅ Notice saved successfully!");
-
-      setForm({
-        type: "Notices",
-        heading: "",
-        link: "",
-        date: "",
-        campusName: "",
-        className: "",
-        section: "",
-        image: null,
+      // 2️⃣ Send only link + data to backend
+      const res = await axios.post("/api/teacher/notice-downloads-dairy", {
+        type: form.type,
+        heading: form.heading,
+        link: fileUrl,
+        publicId: publicId,
+        date: form.date,
+        campusName: form.campusName,
+        className: form.className,
+        section: form.section,
       });
 
-      fetchNotices();
+      if (res.status === 201) {
+        setMessage("✅ Notice saved successfully!");
+
+        setForm({
+          type: "Notices",
+          heading: "",
+          link: "",
+          publicId: "",
+          date: new Date().toLocaleDateString("en-CA", {
+            timeZone: "Asia/Karachi",
+          }),
+          campusName: "",
+          className: "",
+          section: "",
+          image: null,
+        });
+
+        if(fileInputRef.current) fileInputRef.current.value = null; // reset file input
+        setTimeout(() => setMessage(""), 3000);
+        fetchNotices();
+      }
+    } catch (err) {
+      setMessage("❌ Error: " + err.message);
     }
-  } catch (err) {
-    setMessage("❌ Error: " + err.message);
-  }
-};
+  };
 
   //  Delete notice
   const handleDelete = async (id) => {
@@ -129,6 +142,9 @@ try {
 
       if (res.ok) {
         setMessage("🗑️ Notice deleted");
+        setTimeout(() => {
+          setMessage("");
+        }, 3000);
         fetchNotices();
       } else {
         setMessage("❌ Error deleting notice");
@@ -144,7 +160,7 @@ try {
       (!filters.campusName || n.campusName === filters.campusName) &&
       (!filters.className || n.className === filters.className) &&
       (!filters.section || n.section === filters.section) &&
-      (!filters.type || n.type === filters.type)
+      (!filters.type || n.type === filters.type),
   );
 
   return (
@@ -165,6 +181,10 @@ try {
           <option value="Notices">Notices</option>
           <option value="DailyDairy">Daily Dairy</option>
           <option value="Downloads">Downloads</option>
+          <option value="Lectures">Online Lectures</option>
+          <option value="DateSheet">Date Sheet</option>
+          <option value="TimeTable">Time Table</option>
+          <option value="Syllabus">Syllabus</option>
         </select>
 
         {/* Heading */}
@@ -219,7 +239,7 @@ try {
           <option value="Five">Class 5</option>
           <option value="Six">Class 6</option>
           <option value="Seven">Class 7</option>
-          <option value="Pre-9th">Pre-9th</option>
+          <option value="Eight">Eight</option>
           <option value="9th">Class 9</option>
           <option value="10th">Class 10</option>
         </select>
@@ -241,6 +261,7 @@ try {
         <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary transition-colors">
           <input
             type="file"
+            ref={fileInputRef}
             id="image"
             className="hidden"
             onChange={handleChange}
@@ -249,7 +270,7 @@ try {
             <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
 
             <p className="text-xs text-muted-foreground mt-1">
-              You can select multiple images
+              Upload File
             </p>
           </label>
           {form.image && (
@@ -270,20 +291,20 @@ try {
         )}
 
         {uploadProgress > 0 && (
-  <div className="w-full mt-3">
-    <div className="flex justify-between text-sm mb-1">
-      <span>Uploading...</span>
-      <span>{uploadProgress}%</span>
-    </div>
+          <div className="w-full mt-3">
+            <div className="flex justify-between text-sm mb-1">
+              <span>Uploading...</span>
+              <span>{uploadProgress}%</span>
+            </div>
 
-    <div className="w-full bg-gray-200 rounded-full h-3">
-      <div
-        className="bg-blue-600 h-3 rounded-full transition-all duration-200"
-        style={{ width: `${uploadProgress}%` }}
-      ></div>
-    </div>
-  </div>
-)}
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <div
+                className="bg-blue-600 h-3 rounded-full transition-all duration-200"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
       </form>
 
       {/* ---------- FILTERS ---------- */}
@@ -321,7 +342,7 @@ try {
           <option value="Five">Class 5</option>
           <option value="Six">Class 6</option>
           <option value="Seven">Class 7</option>
-          <option value="Pre-9th">Pre-9th</option>
+          <option value="Eight">Eight</option>
           <option value="9th">Class 9</option>
           <option value="10th">Class 10</option>
         </select>
@@ -348,6 +369,10 @@ try {
           <option value="DailyDairy">Daily Dairy</option>
           <option value="Notice">Notice</option>
           <option value="Downloads">Downloads</option>
+          <option value="Lectures">Online Lectures</option>
+          <option value="DateSheet">Date Sheet</option>
+          <option value="TimeTable">Time Table</option>
+          <option value="Syllabus">Syllabus</option>
         </select>
       </div>
 

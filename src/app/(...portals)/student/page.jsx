@@ -8,6 +8,10 @@ import Academics from "@/components/portal-components/student/Academics"
 import DailyDiary from "@/components/portal-components/student/DailyDiary"
 import NoticesAndAnnouncements from "@/components/portal-components/student/Notices&Announcements"
 import Downloads from "@/components/portal-components/student/Downloads"
+import Lectures from "@/components/portal-components/student/Lectures"
+import DateSheet from "@/components/portal-components/student/DateSheet"
+import TimeTable from "@/components/portal-components/student/TimeTable"
+import Syllabus from "@/components/portal-components/student/Syllabus"
 
 const Page = () => {
   const [tab, setTab] = useState("PersonalInformation")
@@ -24,6 +28,10 @@ const Page = () => {
             {tab === "AttendanceInfo" && <Attendance />}
             {tab === "AcademicRecords" && <Academics />}
             {tab === "DailyDiary" && <DailyDiary />}
+            {tab === "Lectures" && <Lectures />}
+            {tab === "TimeTable" && <TimeTable />}
+            {tab === "DateSheet" && <DateSheet />}
+            {tab === "Syllabus" && <Syllabus />}
             {tab === "Notices&Announcements" && <NoticesAndAnnouncements />}
             {tab === "Downloads" && <Downloads />}
           </div>
