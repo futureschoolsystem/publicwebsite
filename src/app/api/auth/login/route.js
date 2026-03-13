@@ -8,74 +8,110 @@ import DailyLoginCount from "@/models/dailyLoginCountsSchema";
 connect();
 
 export async function POST(request) {
-    try {
-        const body = await request.json();
-        if((body.userName==undefined &&body.registrationNo==undefined) || (body.password==undefined && body.contact==undefined) || body.role==undefined){
-            return NextResponse.json({status:400,errors:"Please fill all fields"}, { status: 400 });
-        }
-        if(body.role==="student"){
-            const student = await Student.findOne({ registrationNo:body.registrationNo})
-            if(!student) {
-                return NextResponse.json({status:400,errors:"Please enter Correct registrationNo"}, { status: 400 });
-            }
-          if (student.contact1 === body.contact) {
-
-  // Get Pakistan time
-  const pakistanTime = new Date(
-    new Date().toLocaleString("en-US", { timeZone: "Asia/Karachi" })
-  );
-
-  const today = new Date(
-    pakistanTime.toLocaleDateString("en-US", { timeZone: "Asia/Karachi" })
-  );
-
-  await DailyLoginCount.findOneAndUpdate(
-    { date: today },
-    {
-      $addToSet: {
-        loginStudents: {
-          registrationNo: student.registrationNo,
-          name: student.name,
-          loginTime: pakistanTime,
-        },
-      },
-    },
-    {
-      upsert: true,
-      new: true,
+  try {
+    const body = await request.json();
+    if (
+      (body.userName == undefined && body.registrationNo == undefined) ||
+      (body.password == undefined && body.contact == undefined) ||
+      body.role == undefined
+    ) {
+      return NextResponse.json(
+        { status: 400, errors: "Please fill all fields" },
+        { status: 400 },
+      );
     }
-  );
+    if (body.role === "student") {
+      const student = await Student.findOne({
+        registrationNo: body.registrationNo,
+      });
+      if (!student) {
+        return NextResponse.json(
+          { status: 400, errors: "Please enter Correct registrationNo" },
+          { status: 400 },
+        );
+      }
+      if (student.contact1 === body.contact) {
+        // Get Pakistan time
+        const pakistanTime = new Date(
+          new Date().toLocaleString("en-US", { timeZone: "Asia/Karachi" }),
+        );
 
-  const url = "student";
+        const today = new Date(
+          pakistanTime.toLocaleDateString("en-US", {
+            timeZone: "Asia/Karachi",
+          }),
+        );
 
-  return NextResponse.json(
-    { status: 200, url, message: "Student Logged in Successfully" },
-    { status: 200 }
-  );
-}
-          else{
-            return NextResponse.json({status:400,errors:"Please enter Correct contact"}, { status: 400 });
-          }
-        }
-        if(body.role==="admin" || body.role==="teacher"){
-            const user = await User.findOne({ userName: body.userName,role:body.role })
-            if (!user) {
-                return NextResponse.json({status:400,errors:"Please enter Correct userName and Role"}, { status: 400 });
-            }
-            const isMatch = await bcrypt.compare(body.password, user.password);
-            if (!isMatch) {
-                return NextResponse.json({status:400,errors:"Please enter Correct password"}, { status: 400 });
-            }
-            const url= user.role
-            if (user.role !== body.role) {
-                return NextResponse.json({status:400,errors:"Please enter Correct role"}, { status: 400 });
-            }
-            if (user.role === "teacher") {
-                return NextResponse.json({status:200,url, message:"Teacher Logged in Successfully"},{status:200})
-            }
-            return NextResponse.json({status:200,url, message:"Admin Logged in Successfully"},{status:200})
-        }
-    } catch (error) {
-            return NextResponse.json({status:500, message: "Internal Server Error" }, { status: 500 });
+        await DailyLoginCount.findOneAndUpdate(
+          { date: today },
+          {
+            $addToSet: {
+              loginStudents: {
+                registrationNo: student.registrationNo,
+                name: student.name,
+                loginTime: pakistanTime,
+              },
+            },
+          },
+          {
+            upsert: true,
+            new: true,
+          },
+        );
+
+        const url = "student";
+
+        return NextResponse.json(
+          { status: 200, url, message: "Student Logged in Successfully" },
+          { status: 200 },
+        );
+      } else {
+        return NextResponse.json(
+          { status: 400, errors: "Please enter Correct contact" },
+          { status: 400 },
+        );
+      }
     }
+    if (body.role === "admin" || body.role === "teacher") {
+      const user = await User.findOne({
+        userName: body.userName,
+        role: body.role,
+      });
+      if (!user) {
+        return NextResponse.json(
+          { status: 400, errors: "Please enter Correct userName and Role" },
+          { status: 400 },
+        );
+      }
+      const isMatch = await bcrypt.compare(body.password, user.password);
+      if (!isMatch) {
+        return NextResponse.json(
+          { status: 400, errors: "Please enter Correct password" },
+          { status: 400 },
+        );
+      }
+      const url = user.role;
+      if (user.role !== body.role) {
+        return NextResponse.json(
+          { status: 400, errors: "Please enter Correct role" },
+          { status: 400 },
+        );
+      }
+      if (user.role === "teacher") {
+        return NextResponse.json(
+          { status: 200, url, message: "Teacher Logged in Successfully" },
+          { status: 200 },
+        );
+      }
+      return NextResponse.json(
+        { status: 200, url, message: "Admin Logged in Successfully" },
+        { status: 200 },
+      );
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { status: 500, message: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
 }

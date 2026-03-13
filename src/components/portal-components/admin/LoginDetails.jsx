@@ -98,7 +98,12 @@ export default function LoginDetails() {
                   </td>
                   
                   <td className="border px-4 py-2">
-                    {new Date(student.loginTime).toLocaleTimeString()}
+                    {new Date(student.loginTime).toLocaleTimeString("en-PK", {
+  timeZone: "Asia/Karachi",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit"
+})}
                   </td>
                 </tr>
               ))
