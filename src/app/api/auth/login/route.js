@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import Student from "@/models/studentSchema";
 import User from "@/models/userSchema";
 import { NextResponse } from "next/server";
-
+import DailyLoginCount from "@/models/dailyLoginCountsSchema";
 
 connect();
 
@@ -18,10 +18,41 @@ export async function POST(request) {
             if(!student) {
                 return NextResponse.json({status:400,errors:"Please enter Correct registrationNo"}, { status: 400 });
             }
-          if ( student.contact1===body.contact){
-            const url= 'student'
-            return NextResponse.json({status:200,url, message:"Student Logged in Successfully"},{status:200})
-          }
+          if (student.contact1 === body.contact) {
+
+  // Get Pakistan time
+  const pakistanTime = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Karachi" })
+  );
+
+  const today = new Date(
+    pakistanTime.toLocaleDateString("en-US", { timeZone: "Asia/Karachi" })
+  );
+
+  await DailyLoginCount.findOneAndUpdate(
+    { date: today },
+    {
+      $addToSet: {
+        loginStudents: {
+          registrationNo: student.registrationNo,
+          name: student.name,
+          loginTime: pakistanTime,
+        },
+      },
+    },
+    {
+      upsert: true,
+      new: true,
+    }
+  );
+
+  const url = "student";
+
+  return NextResponse.json(
+    { status: 200, url, message: "Student Logged in Successfully" },
+    { status: 200 }
+  );
+}
           else{
             return NextResponse.json({status:400,errors:"Please enter Correct contact"}, { status: 400 });
           }

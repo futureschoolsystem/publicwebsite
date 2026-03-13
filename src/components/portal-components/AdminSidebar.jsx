@@ -6,6 +6,7 @@ import SignoutButton from "./SignoutButton"
 import Image from "next/image"
 
 const tabs = [
+  { key: "loginDetails", label: "Daily Login Details", icon: <FaImages /> },
   { key: "gallery", label: "Add Gallery Photos", icon: <FaImages /> },
   { key: "mainPageBanner", label: "Main Page Banner", icon: <FaImage /> },
   { key: "resultPublishPermission", label: "Result Publish Permission", icon: <FaClipboardCheck /> },

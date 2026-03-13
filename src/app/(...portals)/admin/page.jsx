@@ -5,11 +5,13 @@ import AddGalleryPhotos from "@/components/portal-components/admin/AddGalleryPho
 import MainPageBanner from "@/components/portal-components/admin/MainPageBanner";
 import ResultPublishPermission from "@/components/portal-components/admin/ResultPublishPermision";
 import DateSheetPublishPermission from "@/components/portal-components/admin/DateSheetPublishPermission";
+import LoginDetails from "@/components/portal-components/admin/LoginDetails"
 
 const Page = () => {
   const [tab, setTab] = useState("gallery");
 
   const tabs = {
+    loginDetails: <LoginDetails />,
     gallery: <AddGalleryPhotos />,
     mainPageBanner: <MainPageBanner />,
     resultPublishPermission: <ResultPublishPermission />,
