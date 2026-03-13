@@ -9,41 +9,49 @@ const poppins = Poppins({
   weight: ["400", "600", "700"],
 });
 
-export default function ResultPublishPermission() {
+export default function DateSheetPublishPermission() {
   const [year, setYear] = useState("2026");
+  const [dateSheetType, setDateSheetType] = useState("");
   const [testType, setTestType] = useState("");
-  const [stopFeeDefaultersResult, setStopFeeDefaultersResult] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [permissions, setPermissions] = useState(null);
+  const [loadingPermissions, setLoadingPermissions] = useState(true);
 
   useEffect(() => {
     async function fetchPermission() {
       try {
+
         const response = await axios.get(
-          "/api/admin/result-publish-permission",
+          "/api/admin/date-sheet-publish-permission",
         );
         setPermissions(response.data.permissions);
+        setLoadingPermissions(false);
+        setMessage("");
       } catch (error) {
         console.error("Error fetching permission:", error);
+        setLoadingPermissions(false);
+        setMessage("Error fetching permissions");
       }
     }
     fetchPermission();
-  }, [year, testType]);
+  },[loadingPermissions]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const response = await axios.post(
-        "/api/admin/result-publish-permission",
+        "/api/admin/date-sheet-publish-permission",
         {
           year,
           testType,
-          stopFeeDefaultersResult,
+          dateSheetType,
         },
       );
       setMessage(response.data.message);
+      setYear("2026");
+      setLoadingPermissions(true);
     } catch (error) {
       setMessage("Error saving permission");
     }
@@ -52,8 +60,9 @@ export default function ResultPublishPermission() {
 
   const deletePermission = async (id) => {
     try {
-      await axios.delete(`/api/admin/result-publish-permission/${id}`);
+      await axios.delete(`/api/admin/date-sheet-publish-permission/${id}`);
       setPermissions(permissions.filter((p) => p._id !== id));
+      setLoadingPermissions(true);
     } catch (error) {
       console.error("Error deleting permission:", error);
       setMessage("Error deleting permission");
@@ -63,16 +72,16 @@ export default function ResultPublishPermission() {
   return (
     <div className={`${poppins.className} p-6`}>
       <h2 className="text-2xl font-semibold mb-4">
-        Set Result Publish Permission
+        Set DateSheet Publish Permission
       </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
           <label className="block mb-1 font-medium">Year</label>
           <input
             type="text"
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
+             className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             required
           />
         </div>
@@ -98,21 +107,27 @@ export default function ResultPublishPermission() {
             <option value="Second Term">2nd Term</option>
           </select>
         </div>
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="stopFeeDefaultersResult"
-            checked={stopFeeDefaultersResult}
-            onChange={(e) => setStopFeeDefaultersResult(e.target.checked)}
-            className="mr-2"
-          />
-          <label htmlFor="stopFeeDefaultersResult">
-            Stop Result for Fee Defaulters
-          </label>
+        <div >
+          <label className="block mb-1 font-medium">Date Sheet Type</label>
+          <select
+            value={dateSheetType}
+            onChange={(e) => setDateSheetType(e.target.value)}
+            id="dateSheetType"
+            name="dateSheetType"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+            required
+          >
+            <option value="" disabled>
+              Select Date Sheet Type
+            </option>
+            <option value="Oral">Oral</option>
+            <option value="Written">Written</option>
+          </select>
         </div>
+        <div></div>
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white cols px-4 py-2 rounded hover:bg-blue-700"
           disabled={loading}
         >
           {loading ? "Saving..." : "Save Permission"}
@@ -131,7 +146,7 @@ export default function ResultPublishPermission() {
                   Test Type
                 </th>
                 <th className="px-4 py-2 border-b text-left text-sm font-medium text-gray-700">
-                  Stop Fee Defaulters Result
+                  Date Sheet Type
                 </th>
                 <th className="px-4 py-2 border-b text-left text-sm font-medium text-gray-700">
                   Actions
@@ -148,7 +163,7 @@ export default function ResultPublishPermission() {
                     {permission.testType}
                   </td>
                   <td className="px-4 py-2 border-b text-sm text-gray-700">
-                    {permission.stopFeeDefaultersResult ? "Yes" : "No"}
+                    {permission.dateSheetType}
                   </td>
                   <td
                     className="px-4 py-2 border-b text-sm text-blue-600 cursor-pointer hover:underline"

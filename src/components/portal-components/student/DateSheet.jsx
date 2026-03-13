@@ -1,89 +1,17 @@
 "use client";
+
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Download, Calendar, BookOpen, AlertCircle } from "lucide-react";
 
-export default function DateSheet() {
-  const [DateSheet, setDateSheet] = useState([]);
+export default function StudentDateSheet() {
+  const [dateSheets, setDateSheets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [downloading, setDownloading] = useState(null);
+  const [downloading, setDownloading] = useState(false);
   const { data: session, status } = useSession();
-
-  // Download file - uses proxy for raw resources, direct URL for images/videos
-  async function downloadFile(item, filename) {
-    try {
-      setDownloading(item._id);
-
-      let url;
-      if (item.resourceType === "raw") {
-        // Raw resources need proxy (Cloudinary blocks unsigned raw access)
-        url = `/api/file-proxy/${item._id}?action=download`;
-      } else {
-        // Images/videos - use direct Cloudinary URL
-        url = item.link;
-      }
-
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Failed to fetch file");
-      const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error("Download error:", error);
-      window.open(item.link, "_blank");
-    } finally {
-      setDownloading(null);
-    }
-  }
-
-  // Detect file type from stored data
-  function getFileInfo(item) {
-    const url = item.link || "";
-    const format = (item.format || "").toLowerCase();
-    const originalFilename = item.originalFilename || "";
-
-    // Get extension: format field > originalFilename > URL
-    let ext = format;
-    if (!ext && originalFilename) {
-      const parts = originalFilename.split(".");
-      if (parts.length > 1) ext = parts.pop().toLowerCase();
-    }
-    if (!ext && url) {
-      const match = url.split("?")[0].match(/\.([a-z0-9]+)$/i);
-      if (match) ext = match[1].toLowerCase();
-    }
-
-    let fileType = "unknown";
-    let icon = "📄";
-
-    // PDF first (before image check)
-    if (ext === "pdf") {
-      fileType = "pdf";
-      icon = "📕";
-    } else if (/^(jpe?g|png|gif|webp|svg|bmp|tiff?)$/i.test(ext)) {
-      fileType = "image";
-      icon = "🖼️";
-    } else if (/^(mp4|webm|mov|avi|mkv|flv|wmv)$/i.test(ext)) {
-      fileType = "video";
-      icon = "🎥";
-    } else if (/^(docx?|odt|rtf)$/i.test(ext)) {
-      fileType = "document";
-      icon = "📝";
-    } else if (/^(xlsx?|csv|ods)$/i.test(ext)) {
-      fileType = "spreadsheet";
-      icon = "📊";
-    } else if (/^(pptx?|odp)$/i.test(ext)) {
-      fileType = "presentation";
-      icon = "📊";
-    }
-
-    return { fileType, icon, ext };
-  }
+  const printRef = useRef();
 
   useEffect(() => {
     async function fetchDateSheet() {
@@ -94,15 +22,14 @@ export default function DateSheet() {
           `/api/student/date-sheet/${session.user.registrationNo}`
         );
         const data = await res.json();
-
-        if (data.success && Array.isArray(data.DateSheet)) {
-          setDateSheet(data.DateSheet);
+        if (data.success && Array.isArray(data.DateSheets)) {
+          setDateSheets(data.DateSheets);
         } else {
-          setDateSheet([]);
+          setDateSheets([]);
         }
       } catch (error) {
         console.error("Error fetching DateSheet:", error);
-        setDateSheet([]);
+        setDateSheets([]);
       } finally {
         setLoading(false);
       }
@@ -111,115 +38,215 @@ export default function DateSheet() {
     fetchDateSheet();
   }, [status, session]);
 
+  const downloadPDF = async () => {
+  setDownloading(true);
+
+  try {
+    const { jsPDF } = await import("jspdf");
+    const autoTable = (await import("jspdf-autotable")).default;
+
+    const doc = new jsPDF();
+
+    let yPosition = 20;
+
+    dateSheets.forEach((ds) => {
+      // Title
+      doc.setFontSize(18);
+      doc.text("Exam Date Sheet", 14, yPosition);
+
+      yPosition += 8;
+
+      doc.setFontSize(12);
+      doc.text(`Test Type: ${ds.testType}`, 14, yPosition);
+      yPosition += 6;
+
+      doc.text(`Date Sheet Type: ${ds.dateSheetType}`, 14, yPosition);
+      yPosition += 6;
+
+      doc.text(`Year: ${ds.year}`, 14, yPosition);
+
+      yPosition += 10;
+
+      const tableRows = [];
+
+      ds.schedule.forEach((day) => {
+        day.papers.forEach((paper) => {
+          tableRows.push([
+            new Date(day.date).toLocaleDateString(),
+            day.day,
+            paper.subjectName,
+            paper.className,
+          ]);
+        });
+      });
+
+      autoTable(doc, {
+        startY: yPosition,
+        head: [["Date", "Day", "Subject", "Class"]],
+        body: tableRows,
+        theme: "grid",
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+        },
+      });
+
+      yPosition = doc.lastAutoTable.finalY + 15;
+    });
+
+    doc.save(`DateSheet_${new Date().getFullYear()}.pdf`);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+  }
+
+  setDownloading(false);
+};
+
+
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto p-4 text-gray-500">
-        ⏳ Loading Please Wait...
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6 flex flex-col items-center gap-4">
+            <div className="animate-spin">
+              <Calendar className="w-8 h-8 text-primary" />
+            </div>
+            <p className="text-muted-foreground">Loading your exam date sheet...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!dateSheets.length) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md border-dashed">
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center gap-3 text-center">
+              <AlertCircle className="w-12 h-12 text-muted-foreground" />
+              <div>
+                <h3 className="font-semibold text-foreground mb-1">No Date Sheet Available</h3>
+                <p className="text-sm text-muted-foreground">
+                  Your exam schedule will appear here once it's published.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">📘 Available DateSheet</h2>
-
-      {!DateSheet.length ? (
-        <p className="text-gray-500">No Data found.</p>
-      ) : (
-        <div className="space-y-4">
-          {DateSheet.map((item) => {
-            const { fileType, icon, ext } = getFileInfo(item);
-            const filename =
-              item.originalFilename ||
-              `${(item.heading || "file").replace(/[^a-z0-9]/gi, "_")}.${ext || "file"}`;
-
-            return (
-              <div
-                key={item._id}
-                className="p-4 border rounded-lg shadow bg-white"
-              >
-                <div className="flex justify-between items-center text-sm text-gray-600">
-                  <span>{new Date(item.date).toLocaleDateString()}</span>
-                  <span className="text-xs bg-gray-100 px-2 py-1 rounded">
-                    {icon} {ext ? ext.toUpperCase() : fileType.toUpperCase()}
-                  </span>
-                </div>
-
-                <h3 className="text-lg font-semibold mt-2">{item.heading}</h3>
-
-                {item.originalFilename && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    📎 {item.originalFilename}
-                  </p>
-                )}
-
-                {item.link && (
-                  <div className="mt-3 space-y-2">
-                    {/* IMAGE preview - direct Cloudinary URL */}
-                    {fileType === "image" && (
-                      <img
-                        src={item.link}
-                        alt={item.heading}
-                        className="max-h-60 rounded shadow cursor-pointer hover:opacity-90"
-                        onClick={() => window.open(item.link, "_blank")}
-                      />
-                    )}
-
-                    {/* VIDEO preview - direct Cloudinary URL */}
-                    {fileType === "video" && (
-                      <video
-                        src={item.link}
-                        controls
-                        className="max-h-60 rounded shadow w-full"
-                      />
-                    )}
-
-                    {/* PDF - View via proxy (bypasses Cloudinary raw auth) */}
-                    {fileType === "pdf" && (
-                      <button
-                        onClick={() =>
-                          window.open(
-                            `/api/file-proxy/${item._id}?action=view`,
-                            "_blank"
-                          )
-                        }
-                        className="inline-flex items-center gap-2 bg-blue-500 text-white px-3 py-2 rounded shadow text-sm hover:bg-blue-600"
-                      >
-                        👁️ View PDF
-                      </button>
-                    )}
-
-                    {/* Other file types */}
-                    {fileType !== "image" &&
-                      fileType !== "video" &&
-                      fileType !== "pdf" && (
-                        <div className="p-3 bg-gray-50 rounded border border-gray-200 text-sm text-gray-600">
-                          {icon}{" "}
-                          {fileType === "unknown"
-                            ? "File"
-                            : fileType.charAt(0).toUpperCase() +
-                              fileType.slice(1)}{" "}
-                          attachment available
-                        </div>
-                      )}
-
-                    {/* Download button */}
-                    <button
-                      onClick={() => downloadFile(item, filename)}
-                      disabled={downloading === item._id}
-                      className="inline-flex items-center gap-2 bg-white border border-gray-300 px-4 py-2 rounded shadow text-sm hover:bg-gray-50 transition disabled:opacity-50"
-                    >
-                      {downloading === item._id
-                        ? "⏳ Downloading..."
-                        : `⬇️ Download ${ext ? ext.toUpperCase() : "File"}`}
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 py-10 md:py-4 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="h-10 w-1 bg-primary rounded-full" />
+            <h1 className="text-4xl font-bold text-foreground">Exam Date Sheet</h1>
+          </div>
         </div>
-      )}
+
+        {/* Download Button */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-8">
+          <Button
+            onClick={downloadPDF}
+            disabled={downloading}
+            className="sm:w-auto gap-2 bg-primary hover:bg-primary/90"
+          >
+            <Download className="w-4 h-4" />
+            {downloading ? "Generating PDF..." : "Download as PDF"}
+          </Button>
+          
+        </div>
+
+        {/* Main Content - Hidden for print but visible in DOM for PDF */}
+        <div ref={printRef} className="space-y-6">
+          {dateSheets.map((ds) => (
+            <Card key={ds._id} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow">
+              {/* Card Header */}
+              <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 pb-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <CardTitle className="text-2xl text-primary flex items-center gap-2">
+                      <BookOpen className="w-6 h-6" />
+                      {ds.testType}
+                    </CardTitle>
+                    <CardDescription className="mt-1 text-base">
+                      <span className="font-semibold text-foreground">{ds.dateSheetType}</span>
+                      {" "} • {" "}
+                      <span className="text-muted-foreground">Year {ds.year}</span>
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+
+              {/* Card Content */}
+              <CardContent className="pt-6">
+                <div className="space-y-6">
+                  {ds.schedule.map((day, dayIndex) => (
+                    <div key={day.date} className="border-l-4 border-primary/30 pl-4 py-2">
+                      {/* Date Header */}
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="bg-primary/10 dark:bg-primary/20 rounded-lg p-3">
+                          <Calendar className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg text-foreground">
+                            {new Date(day.date).toLocaleDateString("en-US", {
+                              weekday: "long",
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">{day.day}</p>
+                        </div>
+                      </div>
+
+                      {/* Subjects List */}
+                      <div className="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-4 space-y-2">
+                        {day.papers.map((paper, idx) => (
+                          <div
+                            key={paper._id}
+                            className="flex items-start gap-4 pb-2 last:pb-0"
+                          >
+                            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 dark:bg-primary/30 flex-shrink-0 mt-0.5">
+                              <span className="text-xs font-semibold text-primary">
+                                {idx + 1}
+                              </span>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-foreground">
+                                {paper.subjectName}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Class: {paper.className}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Footer Note */}
+        <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900 rounded-lg">
+          <p className="text-sm text-blue-900 dark:text-blue-100 flex items-start gap-2">
+            <span className="text-base mt-0.5">ℹ️</span>
+            <span>
+              <strong>Important:</strong> Please save or download this date sheet.
+            </span>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

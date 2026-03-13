@@ -13,6 +13,7 @@ export async function GET(request, context) {
       message: "Student not found! Login First",
     });
   }
+  
  const diaries = await NoticeDownloadDairy.find({
   className: { $in: [student.className, "All"] },
   campusName: { $in: [student.campusName, "All"] },

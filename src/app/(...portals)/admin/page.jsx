@@ -4,6 +4,7 @@ import AdminSidebar from "@/components/portal-components/AdminSidebar";
 import AddGalleryPhotos from "@/components/portal-components/admin/AddGalleryPhotos";
 import MainPageBanner from "@/components/portal-components/admin/MainPageBanner";
 import ResultPublishPermission from "@/components/portal-components/admin/ResultPublishPermision";
+import DateSheetPublishPermission from "@/components/portal-components/admin/DateSheetPublishPermission";
 
 const Page = () => {
   const [tab, setTab] = useState("gallery");
@@ -11,7 +12,8 @@ const Page = () => {
   const tabs = {
     gallery: <AddGalleryPhotos />,
     mainPageBanner: <MainPageBanner />,
-    resultPublishPermission: <ResultPublishPermission />
+    resultPublishPermission: <ResultPublishPermission />,
+    dateSheetPublishPermission: <DateSheetPublishPermission />
   };
 
   return (

@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import {   FaBars, FaTimes, FaImage, FaImages } from "react-icons/fa"
+import {   FaBars, FaTimes, FaImage, FaImages,FaClipboardCheck, FaCalendarAlt } from "react-icons/fa"
 import { cn } from "@/lib/utils"
 import SignoutButton from "./SignoutButton"
 import Image from "next/image"
@@ -8,7 +8,8 @@ import Image from "next/image"
 const tabs = [
   { key: "gallery", label: "Add Gallery Photos", icon: <FaImages /> },
   { key: "mainPageBanner", label: "Main Page Banner", icon: <FaImage /> },
-  { key: "resultPublishPermission", label: "Result Publish Permission", icon: <FaImage /> },
+  { key: "resultPublishPermission", label: "Result Publish Permission", icon: <FaClipboardCheck /> },
+  { key: "dateSheetPublishPermission", label: "DateSheet Publish Permission", icon: <FaCalendarAlt /> },
 ]
 
 const AdminSidebar = ({ setTab }) => {
