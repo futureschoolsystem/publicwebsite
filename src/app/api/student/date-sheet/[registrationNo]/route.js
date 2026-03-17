@@ -28,13 +28,22 @@ export async function GET(request, context) {
   }
 
   const DateSheets = await Promise.all(
-    permissions.map((p) =>
-      DateSheet.findOne({
-        year: p.year,
-        testType: p.testType,
-        dateSheetType: p.dateSheetType,
-      })
-    )
+    permissions.map((p) => {
+
+      let query = {};
+      if(p.year && p.testType){
+        query = {
+          year: p.year,
+          testType: p.testType,
+        }
+        if(p.dateSheetType)
+          {
+            query.dateSheetType = p.dateSheetType;
+          }
+        }
+      return  DateSheet.findOne(query)
+      }
+      )
   );
 
   // remove null values

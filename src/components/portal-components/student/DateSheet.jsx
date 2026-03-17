@@ -186,51 +186,56 @@ export default function StudentDateSheet() {
               {/* Card Content */}
               <CardContent className="pt-6">
                 <div className="space-y-6">
-                  {ds.schedule.map((day, dayIndex) => (
-                    <div key={day.date} className="border-l-4 border-primary/30 pl-4 py-2">
-                      {/* Date Header */}
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="bg-primary/10 dark:bg-primary/20 rounded-lg p-3">
-                          <Calendar className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-lg text-foreground">
-                            {new Date(day.date).toLocaleDateString("en-US", {
-                              weekday: "long",
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </h4>
-                          <p className="text-sm text-muted-foreground">{day.day}</p>
-                        </div>
-                      </div>
+                {ds.schedule
+  .filter((day) => day.papers && day.papers.length > 0)
+  .map((day, dayIndex) => (
+    <div key={day.date} className="border-l-4 border-primary/30 pl-4 py-2">
+      
+      {/* Date Header */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className="bg-primary/10 dark:bg-primary/20 rounded-lg p-3">
+          <Calendar className="w-5 h-5 text-primary" />
+        </div>
+        <div>
+          <h4 className="font-bold text-lg text-foreground">
+            {new Date(day.date).toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </h4>
+          <p className="text-sm text-muted-foreground">{day.day}</p>
+        </div>
+      </div>
 
-                      {/* Subjects List */}
-                      <div className="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-4 space-y-2">
-                        {day.papers.map((paper, idx) => (
-                          <div
-                            key={paper._id}
-                            className="flex items-start gap-4 pb-2 last:pb-0"
-                          >
-                            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 dark:bg-primary/30 flex-shrink-0 mt-0.5">
-                              <span className="text-xs font-semibold text-primary">
-                                {idx + 1}
-                              </span>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-foreground">
-                                {paper.subjectName}
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                Class: {paper.className}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+      {/* Subjects List */}
+      <div className="bg-slate-50 dark:bg-slate-900/50 rounded-lg p-4 space-y-2">
+        {day.papers.map((paper, idx) => (
+          <div
+            key={paper._id}
+            className="flex items-start gap-4 pb-2 last:pb-0"
+          >
+            <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 dark:bg-primary/30 flex-shrink-0 mt-0.5">
+              <span className="text-xs font-semibold text-primary">
+                {idx + 1}
+              </span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-foreground">
+                {paper.subjectName}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Class: {paper.className}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  ))}
+
                 </div>
               </CardContent>
             </Card>

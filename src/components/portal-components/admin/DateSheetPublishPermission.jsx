@@ -115,9 +115,9 @@ export default function DateSheetPublishPermission() {
             id="dateSheetType"
             name="dateSheetType"
             className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-            required
+            
           >
-            <option value="" disabled>
+            <option value="">
               Select Date Sheet Type
             </option>
             <option value="Oral">Oral</option>
@@ -163,7 +163,7 @@ export default function DateSheetPublishPermission() {
                     {permission.testType}
                   </td>
                   <td className="px-4 py-2 border-b text-sm text-gray-700">
-                    {permission.dateSheetType}
+                    {permission.dateSheetType || " "}
                   </td>
                   <td
                     className="px-4 py-2 border-b text-sm text-blue-600 cursor-pointer hover:underline"
