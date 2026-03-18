@@ -239,7 +239,7 @@ export default function UploadNotice() {
           <option value="Five">Class 5</option>
           <option value="Six">Class 6</option>
           <option value="Seven">Class 7</option>
-          <option value="Eight">Eight</option>
+          <option value="Pre-Nine">Pre-Nine</option>
           <option value="9th">Class 9</option>
           <option value="10th">Class 10</option>
         </select>
@@ -342,7 +342,7 @@ export default function UploadNotice() {
           <option value="Five">Class 5</option>
           <option value="Six">Class 6</option>
           <option value="Seven">Class 7</option>
-          <option value="Eight">Eight</option>
+          <option value="Pre-Nine">Pre-Nine</option>
           <option value="9th">Class 9</option>
           <option value="10th">Class 10</option>
         </select>
