@@ -1,36 +1,56 @@
 import React from 'react'
 import { useSession } from 'next-auth/react'
 import axios from 'axios';
+
 const Academics = () => {
-  const {data:session,status} = useSession();
-  const [ testType, setTestType ] = React.useState("");
-  const handleChange = async (e) => {
-    if(session?.user?.registrationNo){
-      try{
-    e.preventDefault();
-    const selectedTestType = e.target.value;
-   
-    const response= await axios.get('/api/student/academics',
-      {params: {
-        registrationNo: session.user.registrationNo,
-        testType: selectedTestType
-      }}
-    )
-    if(response.data.success===false){
-      alert(response.data.message);
+  const { data: session } = useSession();
+  const currentYear = new Date().getFullYear().toString();
+  const [year, setYear] = React.useState(currentYear);
+  const [testType, setTestType] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+
+  const currentYearNum = new Date().getFullYear();
+  const availableYears = [
+    currentYearNum.toString(),
+    (currentYearNum - 1).toString(),
+    (currentYearNum - 2).toString(),
+    (currentYearNum - 3).toString(),
+  ];
+
+  const handleFetchResult = async (targetYear = year, targetTestType = testType) => {
+    if (!session?.user?.registrationNo) return;
+    if (!targetTestType) {
+      alert('Please select a test type / term.');
       return;
     }
-    if(selectedTestType === "Second Term"){
-      printResultCardsForSecondTerm(response.data.result);
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/student/academics', {
+        params: {
+          registrationNo: session.user.registrationNo,
+          testType: targetTestType,
+          year: targetYear,
+        },
+      });
+
+      if (response.data.success === false) {
+        alert(response.data.message);
+        return;
+      }
+
+      if (targetTestType === 'Second Term') {
+        printResultCardsForSecondTerm(response.data.result);
+      } else {
+        printResultCards(response.data.result);
+      }
+    } catch (error) {
+      console.error('Error fetching academic records:', error);
+      const msg = error?.response?.data?.message || 'Failed to load academic records.';
+      alert(msg);
+    } finally {
+      setLoading(false);
     }
-    else {
-      printResultCards(response.data.result);
-    }
-  }catch(error){
-    console.error("Error fetching academic records:", error);
-  }
-}
-  }
+  };
 
 function printResultCardsForSecondTerm(data) {
   const printWindow = window.open("", "", "width=1000,height=700");
@@ -544,32 +564,105 @@ function printResultCards(data) {
 }
 
   return (
-   <div className="bg-white rounded-lg shadow-sm border p-6">
-    <h2 className="text-2xl font-bold text-gray-800 mb-4">Academic Records</h2>
-     {/* Test Type Selection */}
+    <div className="bg-white rounded-xl shadow-sm border p-6">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+        <div className="w-10 h-10 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-lg">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">Academic Records</h2>
+          <p className="text-xs text-gray-500">Select session year and test term to view and print result card</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+        {/* Academic Year Selection */}
+        <div className="space-y-2">
+          <label htmlFor="academicYear" className="block text-sm font-semibold text-gray-700">
+            Academic Year
+          </label>
+          <select
+            id="academicYear"
+            name="academicYear"
+            value={year}
+            onChange={(e) => {
+              const newYear = e.target.value;
+              setYear(newYear);
+              if (testType) {
+                handleFetchResult(newYear, testType);
+              }
+            }}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white"
+          >
+            {availableYears.map((yr) => (
+              <option key={yr} value={yr}>
+                {yr} {yr === currentYear ? '(Current)' : ''}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Test Type Selection */}
         <div className="space-y-2">
           <label htmlFor="testType" className="block text-sm font-semibold text-gray-700">
-            <i className="fas fa-clipboard-check mr-2 text-orange-600"></i>Test Type
+            Test Type / Term
           </label>
-          <select value={testType} onChange={(e)=> {
-            setTestType(e.target.value)
-            handleChange(e)
-          } 
-          } id="testType" name="testType" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                  required>
-            <option value="" disabled >Select Test Type</option>
+          <select
+            id="testType"
+            name="testType"
+            value={testType}
+            onChange={(e) => {
+              const newTestType = e.target.value;
+              setTestType(newTestType);
+              if (newTestType) {
+                handleFetchResult(year, newTestType);
+              }
+            }}
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white"
+            required
+          >
+            <option value="" disabled>Select Test Type</option>
             <option value="First Assessment">1st Assessment</option>
             <option value="Second Assessment">2nd Assessment</option>
             <option value="Third Assessment">3rd Assessment</option>
             <option value="Fourth Assessment">4th Assessment</option>
             <option value="Fifth Assessment">5th Assessment</option>
             <option value="First Term">1st Term</option>
-            <option value="Second Term">2nd Term</option>
+            <option value="Second Term">2nd Term (Annual)</option>
           </select>
         </div>
-  </div>
-  )
+      </div>
+
+      {/* Button to view/print result card */}
+      <div className="pt-2">
+        <button
+          type="button"
+          disabled={!testType || loading}
+          onClick={() => handleFetchResult(year, testType)}
+          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+        >
+          {loading ? (
+            <>
+              <svg className="animate-spin h-4 w-4 text-white" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+              </svg>
+              <span>Loading Result...</span>
+            </>
+          ) : (
+            <span className="flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              View Result Card
+            </span>
+          )}
+        </button>
+      </div>
+    </div>
+  );
 }
 
-export default Academics
+export default Academics;

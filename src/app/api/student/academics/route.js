@@ -6,109 +6,126 @@ import ResultPublishPermission from "@/models/resultPublishPermessionSchema";
 import Fee from "@/models/feeSchema";
 import OtherFeePayment from "@/models/otherFeeSchema";
 
-
 export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const registrationNo = searchParams.get("registrationNo");
-  const testType = searchParams.get("testType");
+  try {
+    const { searchParams } = new URL(request.url);
+    const registrationNo = searchParams.get("registrationNo");
+    const testType = searchParams.get("testType");
+    const yearParam = searchParams.get("year");
 
-  if (!registrationNo || !testType) {
-    return NextResponse.json({
-      success: false,
-      message: "Registration number and test type are required.",
+    if (!registrationNo || !testType) {
+      return NextResponse.json({
+        success: false,
+        message: "Registration number and test type are required.",
+      });
+    }
+
+    await connect();
+
+    // Default to current year if year is not provided
+    const year = yearParam ? yearParam.trim() : new Date().getFullYear().toString();
+
+    // Check if result publish permission exists for this year and testType
+    const permission = await ResultPublishPermission.findOne({
+      year: String(year),
+      testType: testType,
     });
-  }
 
-  await connect();
-  
-  let year= new Date().getFullYear().toString();
-  if(testType == "Second Term") {
-    year= (new Date().getFullYear() - 1).toString();
-  }
+    if (!permission) {
+      return NextResponse.json({
+        success: false,
+        message: `Results for ${testType} (${year}) are not published yet.`,
+      });
+    }
 
-  const permission = await ResultPublishPermission.findOne({ year });
+    // Find the student
+    const student = await Student.findOne({ registrationNo });
+    if (!student) {
+      return NextResponse.json({
+        success: false,
+        message: "Student not found! Please login again.",
+      });
+    }
 
-  if (!permission) {
-    return NextResponse.json({
-      success: false,
-      message: "Results are not published yet.",
+    // If stopFeeDefaultersResult is active, verify fees
+    if (permission.stopFeeDefaultersResult) {
+      const studentWithFees = await Student.findById(student._id)
+        .populate("feeRecords")
+        .populate("otherFeeChargesRecords");
+
+      const hasUnpaidFeeRecords = studentWithFees?.feeRecords?.some(
+        (fee) => fee.status === "Unpaid"
+      );
+
+      const hasUnpaidOtherFees = studentWithFees?.otherFeeChargesRecords?.some(
+        (otherFee) => otherFee.status === "Unpaid"
+      );
+
+      if (hasUnpaidFeeRecords || hasUnpaidOtherFees) {
+        return NextResponse.json({
+          success: false,
+          message:
+            "Results are not available due to unpaid fees. Please clear your dues to access the results.",
+        });
+      }
+    }
+
+    // Fetch the requested academic record
+    const record = await StudentMarks.findOne({
+      student_id: student._id.toString(),
+      testType,
+      year: Number(year),
     });
-  }
-  // Find the student
-  const student = await Student.findOne({ registrationNo });
-  if (!student) {
-    return NextResponse.json({
-      success: false,
-      message: "Student not found! Login first.",
-    });
-  }
 
-if (permission.stopFeeDefaultersResult) {
-  // Fetch the student with populated fee records
-  const studentWithFees = await Student.findById(student._id)
-    .populate("feeRecords") // Populate Fee documents
-    .populate("otherFeeChargesRecords"); // Populate OtherFeePayment documents
+    if (!record) {
+      return NextResponse.json({
+        success: false,
+        message: `No academic records found for ${testType} in year ${year}.`,
+      });
+    }
 
-  // Check if any Fee records are unpaid
-  const hasUnpaidFeeRecords = studentWithFees.feeRecords.some(
-    (fee) => fee.status === "Unpaid"
-  );
+    // For Second Term (Annual), also fetch First Term record if available
+    let firstTermRecord = null;
+    if (testType === "Second Term") {
+      firstTermRecord = await StudentMarks.findOne({
+        student_id: student._id.toString(),
+        testType: "First Term",
+        year: Number(year),
+      });
 
-  // Check if any Other Fee records are unpaid
-  const hasUnpaidOtherFees = studentWithFees.otherFeeChargesRecords.some(
-    (otherFee) => otherFee.status === "Unpaid"
-  );
+      // Fallback to year - 1 if not recorded in the same year
+      if (!firstTermRecord) {
+        firstTermRecord = await StudentMarks.findOne({
+          student_id: student._id.toString(),
+          testType: "First Term",
+          year: Number(year) - 1,
+        });
+      }
+    }
 
-  if (hasUnpaidFeeRecords || hasUnpaidOtherFees) {
-    return NextResponse.json({
-      success: false,
-      message:
-        "Results are not available due to unpaid fees. Please clear your dues to access the results.",
-    });
-  }
-}
-  
-  // Fetch the requested academic record
-  const record = await StudentMarks.findOne({
-    student_id: student._id.toString(),
-    testType,
-    year,
-  });
-
-  if (!record) {
-    return NextResponse.json({
-      success: false,
-      message: "No academic records found for the specified test type and year.",
-    });
-  }
-
-  // Fetch first term record if the requested record is Second Term
-  let firstTermRecord = null;
-  if (testType === "Second Term") {
-    firstTermRecord = await StudentMarks.findOne({
-      student_id: student._id,
-      testType: "First Term",
-      year: year - 1,
-    });
-  }
-
-  // Prepare the response
-  const result = [
-    {
-      student: {
-        id: student._id,
-        name: student.name,
-        registrationNo: student.registrationNo,
-        fatherName: student.fatherName,
-        className: student.className,
-        section: student.section,
-        campusName: student.campusName,
-        photo: student.photo,
+    const result = [
+      {
+        student: {
+          id: student._id,
+          name: student.name,
+          registrationNo: student.registrationNo,
+          fatherName: student.fatherName,
+          className: student.className,
+          section: student.section,
+          campusName: student.campusName,
+          photo: student.photo,
+        },
+        record,
+        firstTermRecord,
       },
-      record,
-      firstTermRecord,
-    },
-  ];
+    ];
 
-  return NextResponse.json({ success: true, result });
+    return NextResponse.json({ success: true, result });
+  } catch (error) {
+    console.error("Error in academics API:", error);
+    return NextResponse.json(
+      { success: false, message: "An error occurred while fetching academic records." },
+      { status: 500 }
+    );
+  }
 }
