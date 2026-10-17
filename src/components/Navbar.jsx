@@ -99,6 +99,7 @@ const Navbar = () => {
                   </div>
 
       <SheetTitle className="sr-only text-lg text-center font-semibold">Navigation Menu</SheetTitle>
+      <SheetDescription className="sr-only">Mobile site navigation links</SheetDescription>
 
                   {/* Mobile Navigation Links */}
                   <div className="flex flex-col space-y-2 pt-6">

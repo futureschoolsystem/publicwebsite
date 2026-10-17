@@ -3,7 +3,7 @@ import { connect } from "@/lib/mongodb";
 import { GalleryPhoto } from "@/models/gallerySchema";
 import cloudinary from "@/config/cloudinary";
 
-await connect();
+// connect moved into handlers
 
 export async function DELETE(request, { params }) {
   try {

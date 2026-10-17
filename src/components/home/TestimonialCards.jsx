@@ -59,7 +59,7 @@ const testimonials = [
   },
   {
     quote:
-      "From day one, the school has provided a safe, nurturing environment. The dedication of the teachers is visible in my child’s progress.",
+      "From day one, the school has provided a safe, nurturing environment. The dedication of the teachers is visible in my child's progress.",
     name: "Mr. Farooq Ahmed",
     title: "Parent of Grade 9 Student",
   },
@@ -77,7 +77,7 @@ const testimonials = [
   },
   {
     quote:
-      "Future School System instills discipline, creativity, and a love for learning. I’m proud to see my child thriving here.",
+      "Future School System instills discipline, creativity, and a love for learning. I'm proud to see my child thriving here.",
     name: "Mrs. Fatima Ali",
     title: "Parent of Grade 8 Student",
   },

@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { connect } from "@/lib/mongodb";
 import { GalleryPhoto } from "@/models/gallerySchema";
 import cloudinary from "@/config/cloudinary";
-await connect();
+// connect moved into handlers
 
 export async function POST(request) {
+  await connect();
   try {
     const formData = await request.formData();
     const heading = formData.get("Heading");
@@ -55,6 +56,7 @@ export async function POST(request) {
 }
 
 export async function GET() {
+  await connect();
   try {
     const galleryPhotos = await GalleryPhoto.find().sort({ createdAt: -1 });
     return NextResponse.json(galleryPhotos, { status: 200 });

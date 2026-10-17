@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { connect } from "@/lib/mongodb";
 import { BannerPhoto } from "@/models/mainPageBannerSchema";
 import cloudinary from "@/config/cloudinary";
-await connect();
 
 export async function POST(request) {
   try {
+    await connect();
     const formData = await request.formData();
     const banner = formData.get("banner");
 
@@ -21,10 +21,14 @@ export async function POST(request) {
 
     // 2. Delete old image from Cloudinary
     if (existingBanner?.publicId) {
-      await cloudinary.uploader.destroy(existingBanner.publicId);
+      try {
+        await cloudinary.uploader.destroy(existingBanner.publicId);
+      } catch (e) {
+        console.warn("Cloudinary cleanup warning:", e);
+      }
     }
 
-    //  3. Upload new image
+    // 3. Upload new image
     const bytes = await banner.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
@@ -43,7 +47,7 @@ export async function POST(request) {
         .end(buffer);
     });
 
-    //  4. Save new banner
+    // 4. Save new banner
     const newBanner = await BannerPhoto.findOneAndUpdate(
       {},
       {
@@ -65,8 +69,9 @@ export async function POST(request) {
 
 export async function GET() {
   try {
-    const bannerPhoto = await BannerPhoto.findOne();
-    return NextResponse.json(bannerPhoto, { status: 200 });
+    await connect();
+    const bannerPhoto = await BannerPhoto.findOne({});
+    return NextResponse.json(bannerPhoto || {}, { status: 200 });
   } catch (error) {
     console.error("Error fetching banner photo:", error);
     return NextResponse.json(
