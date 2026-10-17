@@ -20,12 +20,14 @@ export async function GET(request) {
   }
 
   await connect();
+  
   let year= new Date().getFullYear().toString();
-  if(testType !== "Second Term") {
+  if(testType == "Second Term") {
     year= (new Date().getFullYear() - 1).toString();
   }
 
-  const permission = await ResultPublishPermission.findOne({ year, testType });
+  const permission = await ResultPublishPermission.findOne({ year });
+
   if (!permission) {
     return NextResponse.json({
       success: false,

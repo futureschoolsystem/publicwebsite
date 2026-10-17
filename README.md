@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Future School Management System
 
-## Getting Started
+A modern school management system built with Next.js for student, teacher, and admin portals. It combines a clean public website with secure role-based portals for attendance, fee records, academic resources, notices, file uploads, and content publishing.
 
-First, run the development server:
+## High Level Overview
+
+Future School Management System is designed for small and mid-sized schools that need a web platform to manage student services, teacher uploads, and administrator controls.
+
+- Student portal for self-service academic and attendance information
+- Teacher portal for uploading notices, downloads, lectures, syllabi, timetables, and daily diary content
+- Admin portal for daily login tracking, gallery/banner management, date sheet and result publish permissions
+- Cloudinary file management for images, PDFs, videos, and raw downloads
+- Role-based access using `next-auth` and middleware protection
+
+## Core Features
+
+### Student Portal
+- Personal information dashboard
+- Fee records and printable fee voucher generation
+- Attendance overview and monthly attendance tracking
+- Academic records summary
+- Daily diary / announcements access
+- Online lectures and downloadable resources
+- Date sheet, class timetable, and syllabus access
+- Notices and announcements by class/campus/section
+- Secure login using registration number + contact
+
+### Teacher Portal
+- Upload notices, daily diary entries, downloads, online lectures, date sheets, timetables, and syllabus files
+- Cloudinary upload support for media and documents
+- Filtering by campus, class, section, and content type
+- Delete and manage published content
+
+### Admin Portal
+- Add and manage gallery photos
+- Update the public main page banner
+- View daily student login details by date
+- Configure result publish permissions
+- Configure date sheet publish permissions
+
+### Public Site
+- Home page, about, academics, admission info, gallery, contact pages
+- Responsive public landing pages with modern UI components
+- Contact form with email delivery via Resend API
+
+## Technology Stack
+
+- Next.js 15 (App Router)
+- React 19
+- Tailwind CSS + daisyUI
+- NextAuth.js with credential authentication
+- MongoDB + Mongoose for data storage
+- Cloudinary for file storage and protected downloads
+- Resend for contact email handling
+- Axios for client-server requests
+
+## Environment Variables
+
+Create a `.env.local` file and provide:
+
+- `MONGODB_URI`
+- `NEXTAUTH_SECRET`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `RESEND_API_KEY`
+
+> Note: Teacher file uploads use Cloudinary with an unsigned preset named `notice_upload` in the current implementation.
+
+## Setup & Run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` to use the application.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Why This System
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Designed for quick school deployment with multiple user roles
+- Built-in content publishing and file management
+- Secure routing and role enforcement using middleware
+- Optimized for responsive desktop and mobile portals
+- Includes both public marketing pages and internal school workflows
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+- `src/app/`: public pages, login, and authenticated portals
+- `src/components/`: UI components, portal layout, and role-specific modules
+- `src/models/`: Mongoose schemas for users, notices, attendance, fees, gallery, and permissions
+- `src/app/api/`: API routes for auth, student data, teacher uploads, admin management, and contact handling
+- `src/config/`: Cloudinary configuration
+- `src/lib/`: MongoDB connection utility
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Ready for Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is production-ready and can be deployed to Vercel, Netlify, or any platform that supports Next.js. It is built with modern tools for fast performance and scalable school operations.
