@@ -5,10 +5,22 @@ import User from "@/models/userSchema";
 import { NextResponse } from "next/server";
 import DailyLoginCount from "@/models/dailyLoginCountsSchema";
 
-connect();
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With, Accept",
+      "Access-Control-Max-Age": "86400",
+    },
+  });
+}
 
 export async function POST(request) {
   try {
+    await connect();
+
     const body = await request.json();
     if (
       (body.userName == undefined && body.registrationNo == undefined) ||
@@ -109,8 +121,9 @@ export async function POST(request) {
       );
     }
   } catch (error) {
+    console.error("Login API error:", error);
     return NextResponse.json(
-      { status: 500, message: "Internal Server Error" },
+      { status: 500, message: "Internal Server Error", error: error.message },
       { status: 500 },
     );
   }
