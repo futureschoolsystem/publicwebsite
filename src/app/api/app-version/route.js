@@ -4,11 +4,11 @@ export async function GET() {
   return NextResponse.json(
     {
       success: true,
-      versionCode: 1,
-      versionName: "1.0.0",
+      versionCode: 2,
+      versionName: "1.0.1", 
       minVersionCode: 1,
       apkUrl: "https://futureschoolsystem.pk/releases/FutureSchoolSystem.apk",
-      releaseNotes: "Initial official release of Future School System parent & student portal.",
+      releaseNotes: "Multi-Child Family Accounts: 1-tap account switcher and unified notifications for all connected children.",
       forceUpdate: false,
     },
     {
