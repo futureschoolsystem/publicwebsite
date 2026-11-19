@@ -4,11 +4,11 @@ export async function GET() {
   return NextResponse.json(
     {
       success: true,
-      versionCode: 2,
-      versionName: "1.0.1", 
+      versionCode: 3,
+      versionName: "1.0.2", 
       minVersionCode: 1,
       apkUrl: "https://futureschoolsystem.pk/releases/FutureSchoolSystem.apk",
-      releaseNotes: "Multi-Child Family Accounts: 1-tap account switcher and unified notifications for all connected children.",
+      releaseNotes: "Multi-Child Family Accounts: 1-tap fast account switcher and real-time student profile sync. Manual update checking now available.",
       forceUpdate: false,
     },
     {
