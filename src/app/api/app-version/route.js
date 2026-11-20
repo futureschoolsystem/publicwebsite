@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-
+//comment: This API route provides the current version information of the application, including version code, version name, minimum required version code, APK download URL, release notes, and whether a force update is required. It also handles CORS preflight requests with the OPTIONS method.
 export async function GET() {
   return NextResponse.json(
     {
@@ -10,7 +10,7 @@ export async function GET() {
       apkUrl: "https://futureschoolsystem.pk/releases/FutureSchoolSystem.apk",
       releaseNotes: "Dedicated App Updates Quick Action Card & Instant Google Firebase Cloud Messaging.",
       forceUpdate: false,
-    },
+    }, 
     {
       headers: {
         "Access-Control-Allow-Origin": "*",
