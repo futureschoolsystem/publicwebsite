@@ -1,46 +1,46 @@
 // src/lib/pushNotification.js
-import admin from "firebase-admin";
+import { initializeApp, cert, getApps } from "firebase-admin/app";
+import { getMessaging } from "firebase-admin/messaging";
 import path from "path";
 import fs from "fs";
 
-let isInitialized = false;
-
-function initFirebaseAdmin() {
-  if (isInitialized || admin.apps.length > 0) {
-    isInitialized = true;
-    return admin;
+function getFirebaseMessaging() {
+  if (getApps().length > 0) {
+    return getMessaging();
   }
 
   try {
+    let credentialData = null;
+
     // 1. Check for service-account.json in the project root
     const keyPath = path.join(process.cwd(), "service-account.json");
     const altKeyPath = path.join(process.cwd(), "firebase-service-account.json");
 
-    let credential;
     if (fs.existsSync(keyPath)) {
-      const fileContent = fs.readFileSync(keyPath, "utf-8");
-      credential = admin.credential.cert(JSON.parse(fileContent));
+      credentialData = JSON.parse(fs.readFileSync(keyPath, "utf-8"));
     } else if (fs.existsSync(altKeyPath)) {
-      const fileContent = fs.readFileSync(altKeyPath, "utf-8");
-      credential = admin.credential.cert(JSON.parse(fileContent));
+      credentialData = JSON.parse(fs.readFileSync(altKeyPath, "utf-8"));
     } else if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-      credential = admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT));
+      try {
+        credentialData = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+      } catch (parseErr) {
+        console.error("Error parsing FIREBASE_SERVICE_ACCOUNT env var:", parseErr);
+      }
     } else if (process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
-      credential = admin.credential.cert({
+      credentialData = {
         projectId: process.env.FIREBASE_PROJECT_ID || "futureschoolsystem",
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
         privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-      });
+      };
     }
 
-    if (credential) {
-      admin.initializeApp({
-        credential,
+    if (credentialData) {
+      initializeApp({
+        credential: cert(credentialData),
         projectId: "futureschoolsystem",
       });
-      isInitialized = true;
       console.log("Firebase Admin successfully initialized for Push Notifications.");
-      return admin;
+      return getMessaging();
     } else {
       console.warn("⚠️ Firebase service-account.json not found in website root. Push notifications won't send until key is added.");
       return null;
@@ -61,9 +61,9 @@ export async function sendPushNotification({
   topic = "notices",
   data = {},
 }) {
-  const firebase = initFirebaseAdmin();
-  if (!firebase) {
-    console.warn("Skipping push notification: Firebase Admin not initialized.");
+  const messaging = getFirebaseMessaging();
+  if (!messaging) {
+    console.warn("Skipping push notification: Firebase Messaging not initialized.");
     return false;
   }
 
@@ -96,7 +96,7 @@ export async function sendPushNotification({
       },
     };
 
-    const response = await firebase.messaging().send(message);
+    const response = await messaging.send(message);
     console.log("Push notification successfully sent via Firebase:", response);
     return true;
   } catch (error) {
