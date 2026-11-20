@@ -4,11 +4,11 @@ export async function GET() {
   return NextResponse.json(
     {
       success: true,
-      versionCode: 8,
-      versionName: "1.0.7",
+      versionCode: 9,
+      versionName: "1.0.8",
       minVersionCode: 1,
       apkUrl: "https://futureschoolsystem.pk/releases/FutureSchoolSystem.apk",
-      releaseNotes: "Dedicated App Updates Quick Action Card & Instant Google Firebase Cloud Messaging.",
+      releaseNotes: "Automatic notification badge clearance when opening notices, homework diary, or results.",
       forceUpdate: false,
     }, 
     {
