@@ -4,11 +4,11 @@ export async function GET() {
   return NextResponse.json(
     {
       success: true,
-      versionCode: 5,
-      versionName: "1.0.4", 
+      versionCode: 6,
+      versionName: "1.0.5", 
       minVersionCode: 1,
       apkUrl: "https://futureschoolsystem.pk/releases/FutureSchoolSystem.apk",
-      releaseNotes: "Background Push Notifications: Periodic sync when closed & category notification count badges on all cards.",
+      releaseNotes: "Instant Push Notifications: Powered by Google Firebase Cloud Messaging (FCM) just like WhatsApp.",
       forceUpdate: false,
     },
     {
