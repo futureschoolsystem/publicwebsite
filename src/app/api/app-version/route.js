@@ -4,11 +4,11 @@ export async function GET() {
   return NextResponse.json(
     {
       success: true,
-      versionCode: 4,
-      versionName: "1.0.3", 
+      versionCode: 5,
+      versionName: "1.0.4", 
       minVersionCode: 1,
       apkUrl: "https://futureschoolsystem.pk/releases/FutureSchoolSystem.apk",
-      releaseNotes: "System Push Notifications: Real-time status bar & lock screen alerts outside the app, dismissible just like WhatsApp.",
+      releaseNotes: "Background Push Notifications: Periodic sync when closed & category notification count badges on all cards.",
       forceUpdate: false,
     },
     {
