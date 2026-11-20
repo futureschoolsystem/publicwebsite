@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { connect } from "@/lib/mongodb";
 import NoticeDownloadDairy from "@/models/noticeDownloadsDairySchema";
 import cloudinary from "@/config/cloudinary";
+import { sendPushNotification } from "@/lib/pushNotification";
 // POST: Save Notice
 
 export async function POST(req) {
@@ -31,6 +32,24 @@ export async function POST(req) {
     });
 
     await notice.save();
+
+    // Trigger instant push notification to parents' phones outside the app (even when closed)
+    try {
+      await sendPushNotification({
+        title: heading,
+        body: `${type}: ${heading} • Class ${className} (${section})`,
+        topic: "notices",
+        data: {
+          id: notice._id ? notice._id.toString() : "",
+          type: type,
+          className: className,
+          section: section,
+        },
+      });
+    } catch (pushErr) {
+      console.error("Push notification failed to send:", pushErr);
+    }
+
     return NextResponse.json(
       { success: true, notice },
       { status: 201 }
