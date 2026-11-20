@@ -5,7 +5,7 @@ export async function GET() {
     {
       success: true,
       versionCode: 8,
-      versionName: "1.0.7", 
+      versionName: "1.0.7",
       minVersionCode: 1,
       apkUrl: "https://futureschoolsystem.pk/releases/FutureSchoolSystem.apk",
       releaseNotes: "Dedicated App Updates Quick Action Card & Instant Google Firebase Cloud Messaging.",
