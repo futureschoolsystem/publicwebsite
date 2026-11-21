@@ -4,11 +4,11 @@ export async function GET() {
   return NextResponse.json(
     {
       success: true,
-      versionCode: 9,
-      versionName: "1.0.8",
+      versionCode: 10,
+      versionName: "1.0.9",
       minVersionCode: 1,
       apkUrl: "https://futureschoolsystem.pk/releases/FutureSchoolSystem.apk",
-      releaseNotes: "Automatic notification badge clearance when opening notices, homework diary, or results.",
+      releaseNotes: "Eliminated duplicate notifications on startup and automatically dismisses status bar notifications when viewed.",
       forceUpdate: false,
     }, 
     {
