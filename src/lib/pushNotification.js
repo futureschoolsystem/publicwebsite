@@ -92,6 +92,7 @@ export async function sendPushNotification({
           defaultSound: true,
           defaultVibrateTimings: true,
           visibility: "public",
+          tag: String(data.type || "fss_school_alert"),
         },
       },
     };

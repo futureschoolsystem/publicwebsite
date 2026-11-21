@@ -35,15 +35,28 @@ export async function POST(req) {
 
     // Trigger instant push notification to parents' phones outside the app (even when closed)
     try {
+      const typeLabels = {
+        Notices: "School Notice",
+        DailyDairy: "Daily Diary",
+        Downloads: "Downloads",
+        Lectures: "Online Lecture",
+        DateSheet: "Exam Date Sheet",
+        TimeTable: "Class Timetable",
+        Syllabus: "Course Syllabus",
+      };
+      const cleanTitle = typeLabels[type] || "School Alert";
+      // Clean heading only: do not append Class or Section into mobile popup message
+      const cleanBody = heading;
+
       await sendPushNotification({
-        title: heading,
-        body: `${type}: ${heading} • Class ${className} (${section})`,
+        title: cleanTitle,
+        body: cleanBody,
         topic: "notices",
         data: {
           id: notice._id ? notice._id.toString() : "",
           type: type,
-          className: className,
-          section: section,
+          heading: heading,
+          category: type === "Notices" ? "notice" : (type === "DailyDairy" ? "diary" : (type === "DateSheet" ? "result" : (type === "Downloads" ? "download" : "notice"))),
         },
       });
     } catch (pushErr) {

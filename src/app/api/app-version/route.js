@@ -4,11 +4,11 @@ export async function GET() {
   return NextResponse.json(
     {
       success: true,
-      versionCode: 10,
-      versionName: "1.0.9",
+      versionCode: 11,
+      versionName: "1.0.10",
       minVersionCode: 1,
       apkUrl: "https://futureschoolsystem.pk/releases/FutureSchoolSystem.apk",
-      releaseNotes: "Eliminated duplicate notifications on startup and automatically dismisses status bar notifications when viewed.",
+      releaseNotes: "Full support for DateSheet, Downloads & Daily Diary notifications, unified card badges, and clean single alerts without class tags in popups.",
       forceUpdate: false,
     }, 
     {
